@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.article_form
+    - field.storage.block_content.field_articles_form
+  module:
+    - premium_articles
+id: block_content.article_form.field_articles_form
+field_name: field_articles_form
+entity_type: block_content
+bundle: article_form
+label: Articles
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    types: {  }
+    categories: {  }
+    count: 20
+    pagination: true
+    type_filter: checkboxes
+    category_filter: ''
+    count_filter: ''
+default_value_callback: ''
+settings: {  }
+field_type: article_filter
