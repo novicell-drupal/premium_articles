@@ -17,8 +17,7 @@ translatable: true
 default_value:
   -
     types_title: ''
-    types:
-      - 0
+    types: {  }
     categories: {  }
     count: 20
     pagination: true

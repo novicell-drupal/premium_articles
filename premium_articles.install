@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * Implements hook_install().
+ */
+function premium_articles_install() {
+  $config_factory = \Drupal::configFactory();
+
+  $config = $config_factory->getEditable('views.view.taxonomy_term');
+  $config->set('status', false);
+  $config->save();
+
+  $config = $config_factory->getEditable('core.entity_view_display.node.page.full');
+  $third_party_settings = $config->get('third_party_settings');
+  if (!empty($third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'])) {
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'articles';
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'article_form';
+  }
+  if (!empty($third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Inline blocks'])) {
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'inline_block:articles';
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'inline_block:article_form';
+  }
+  $config->set('third_party_settings', $third_party_settings);
+  $config->save();
+
+}
