@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_overview
+    - taxonomy.vocabulary.article_types
+  module:
+    - premium_articles
+id: taxonomy_term.article_types.field_overview
+field_name: field_overview
+entity_type: taxonomy_term
+bundle: article_types
+label: Overview
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    types_title: ''
+    types:
+      - 0
+    categories: {  }
+    count: 5
+    pagination: true
+    type_filter: ''
+    category_filter: radios
+    count_filter: ''
+default_value_callback: ''
+settings: {  }
+field_type: article_filter

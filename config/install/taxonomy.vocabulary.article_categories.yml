@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Article categories'
+vid: article_categories
+description: 'Used to group together related articles.'
+weight: 0

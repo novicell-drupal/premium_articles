@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: article_form
+label: 'Article form'
+revision: 0
+description: 'A block showing articles with options for filters and pagination.'

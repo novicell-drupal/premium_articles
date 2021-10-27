@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.article_types.field_overview
+    - taxonomy.vocabulary.article_types
+  module:
+    - premium_articles
+    - text
+id: taxonomy_term.article_types.default
+targetEntityType: taxonomy_term
+bundle: article_types
+mode: default
+content:
+  description:
+    type: text_default
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_overview:
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: teaser
+    third_party_settings: {  }
+    type: article_filter_form
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

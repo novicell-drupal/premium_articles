@@ -1,0 +1,4 @@
+services:
+  premium_articles.manager:
+    class: Drupal\premium_articles\ArticleManager
+    arguments: ['@entity_type.manager']

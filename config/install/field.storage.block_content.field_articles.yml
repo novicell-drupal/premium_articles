@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - premium_articles
+id: block_content.field_articles
+field_name: field_articles
+entity_type: block_content
+type: article_filter
+settings:
+  allow_filters: 0
+module: premium_articles
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

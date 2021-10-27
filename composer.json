@@ -1,0 +1,11 @@
+{
+  "name": "novicell/premium_articles",
+  "type": "drupal-module",
+  "description": "Premium Articles",
+  "keywords": [
+    "Novicell"
+  ],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.novicell.dk",
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: articles
+label: Articles
+revision: 0
+description: 'A block listing a few articles.'
