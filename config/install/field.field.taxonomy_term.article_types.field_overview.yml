@@ -20,10 +20,10 @@ default_value:
     types:
       - 0
     categories: {  }
-    count: 5
+    count: 20
     pagination: true
     type_filter: ''
-    category_filter: radios
+    category_filter: ''
     count_filter: ''
 default_value_callback: ''
 settings: {  }
