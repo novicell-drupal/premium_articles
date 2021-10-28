@@ -17,10 +17,45 @@ function premium_articles_install() {
     $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'article_form';
   }
   if (!empty($third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Inline blocks'])) {
-    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'inline_block:articles';
-    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Custom block types'][] = 'inline_block:article_form';
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Inline blocks'][] = 'inline_block:articles';
+    $third_party_settings['layout_builder_restrictions']['entity_view_mode_restriction']['whitelisted_blocks']['Inline blocks'][] = 'inline_block:article_form';
   }
   $config->set('third_party_settings', $third_party_settings);
   $config->save();
 
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function premium_articles_uninstall($is_syncing) {
+  // Delete all articles
+  $query = \Drupal::entityQuery('node');
+  $query->condition('type', 'article');
+  $nids = $query->execute();
+
+  $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
+  $entities = $storage_handler->loadMultiple($nids);
+  $storage_handler->delete($entities);
+
+  $nodeType = \Drupal::entityTypeManager()->getStorage('node_type')->load('article');
+  $nodeType->delete();
+
+  // Delete all article types
+  $query = \Drupal::entityQuery('taxonomy_term');
+  $query->condition('vid', 'article_types');
+  $tids = $query->execute();
+
+  $storage_handler = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $entities = $storage_handler->loadMultiple($tids);
+  $storage_handler->delete($entities);
+
+  // query all entities you want for example taxonomy term from tags vocabulary
+  $query = \Drupal::entityQuery('taxonomy_term');
+  $query->condition('vid', 'article_categories');
+  $tids = $query->execute();
+
+  $storage_handler = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $entities = $storage_handler->loadMultiple($tids);
+  $storage_handler->delete($entities);
 }

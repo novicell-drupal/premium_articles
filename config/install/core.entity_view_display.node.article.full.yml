@@ -22,70 +22,46 @@ third_party_settings:
   layout_builder:
     allow_custom: true
     enabled: true
-    sections:
-      -
-        layout_id: layout_onecol
-        layout_settings:
-          label: ''
-          column_widths: null
-          color_theme: none
-          column_spacing_top: medium
-          column_spacing_bottom: medium
-          column_width: normal
-        components:
-          83b2750d-2076-467e-9b25-5b84daae7130:
-            uuid: 83b2750d-2076-467e-9b25-5b84daae7130
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'extra_field_block:node:article:links'
-            additional: {  }
-            weight: 0
-          21ea7b07-9d2e-4728-aa88-f6e63e8efead:
-            uuid: 21ea7b07-9d2e-4728-aa88-f6e63e8efead
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:article:field_header'
-              formatter:
-                label: hidden
-                settings:
-                  view_mode: default
-                  link: ''
-                third_party_settings: {  }
-                type: entity_reference_revisions_entity_view
-            additional: {  }
-            weight: 1
-          33fb5a5d-5506-4111-a08b-f2af0a9f6845:
-            uuid: 33fb5a5d-5506-4111-a08b-f2af0a9f6845
-            region: content
-            configuration:
-              label_display: '0'
-              context_mapping:
-                entity: layout_builder.entity
-              id: 'field_block:node:article:field_list_date'
-              formatter:
-                label: hidden
-                settings:
-                  future_format: '@interval hence'
-                  past_format: '@interval ago'
-                  granularity: 2
-                third_party_settings: {  }
-                type: datetime_time_ago
-            additional: {  }
-            weight: 2
-        third_party_settings: {  }
   layout_builder_restrictions:
-    allowed_block_categories: {  }
+    allowed_block_categories:
+      - 'Chaos Tools'
+      - 'Content fields'
+      - 'Custom block types'
+      - Devel
+      - Forms
+      - Help
+      - 'Inline blocks'
+      - 'Lists (Views)'
+      - Menus
+      - Premium
+      - System
+      - User
+      - Webform
+      - core
     entity_view_mode_restriction:
-      whitelisted_blocks: {  }
-      blacklisted_blocks: {  }
-      restricted_categories: {  }
-      allowed_layouts: {  }
+      whitelisted_blocks:
+        'Chaos Tools': {  }
+        'Content fields': {  }
+        Forms: {  }
+        Help: {  }
+        'Lists (Views)': {  }
+        Menus: {  }
+        Premium: {  }
+        System: {  }
+        User: {  }
+        Webform: {  }
+        core: {  }
+      blacklisted_blocks:
+        'Custom block types':
+          - basic
+        'Inline blocks':
+          - 'inline_block:basic'
+      allowed_layouts:
+        - layout_onecol
+        - layout_twocol_section
+        - layout_threecol_section
+      restricted_categories:
+        - Devel
 id: node.article.full
 targetEntityType: node
 bundle: article

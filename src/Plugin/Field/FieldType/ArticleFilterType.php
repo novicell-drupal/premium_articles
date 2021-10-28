@@ -156,4 +156,17 @@ class ArticleFilterType extends FieldItemBase {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave($update) {
+    if (!$update) {
+      if ($this->values['types'][0] == 0) {
+        $this->values['types'][0] = $this->getEntity()->id();
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
 }

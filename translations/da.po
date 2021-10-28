@@ -30,6 +30,18 @@ msgstr "Felt med filter og visningsindstillinger til artikler."
 msgid "Articles"
 msgstr "Artikler"
 
+msgid "Article type"
+msgstr "Artikel type"
+
+msgid "Article types"
+msgstr "Artikel typer"
+
+msgid "Article category"
+msgstr "Artikel kategori"
+
+msgid "Article categories"
+msgstr "Artikel kategorier"
+
 msgid "Article form"
 msgstr "Artikel formular"
 
