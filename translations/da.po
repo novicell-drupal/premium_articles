@@ -45,6 +45,12 @@ msgstr "Artikel kategorier"
 msgid "Article form"
 msgstr "Artikel formular"
 
+msgid "Add article"
+msgstr "Tilføj artikel"
+
+msgid "Find and manage articles."
+msgstr "Find og administrér artikler."
+
 msgid "Show articles of this type."
 msgstr "Vis artikler af denne type."
 
