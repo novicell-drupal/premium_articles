@@ -21,14 +21,17 @@ msgstr "Kerne funktionalitet til Drupal Premium distributionen."
 msgid "Article functionality of the Drupal Premium distribution."
 msgstr "Kerne funktionalitet til Drupal Premium distributionen."
 
+msgid "Article"
+msgstr "Artikel"
+
+msgid "Use <em>articles</em> for your articles, news, events and the like."
+msgstr "Brug <em>artikler</em> til dine artikler, nyheder, begivenheder og lignende."
+
 msgid "Article filter"
 msgstr "Artikel filter"
 
 msgid "Field with filter and display options for articles."
 msgstr "Felt med filter og visningsindstillinger til artikler."
-
-msgid "Articles"
-msgstr "Artikler"
 
 msgid "Article type"
 msgstr "Artikel type"
@@ -36,17 +39,29 @@ msgstr "Artikel type"
 msgid "Article types"
 msgstr "Artikel typer"
 
+msgid "The available types of articles."
+msgstr "De tilgængelige typer af artikler."
+
 msgid "Article category"
 msgstr "Artikel kategori"
 
 msgid "Article categories"
 msgstr "Artikel kategorier"
 
+msgid "Used to group together related articles."
+msgstr "Bruges til at gruppere relaterede artikler."
+
 msgid "Article form"
 msgstr "Artikel formular"
 
 msgid "Add article"
 msgstr "Tilføj artikel"
+
+msgid "List date"
+msgstr "Liste dato"
+
+msgid "List media"
+msgstr "Liste media"
 
 msgid "Find and manage articles."
 msgstr "Find og administrér artikler."
@@ -72,11 +87,17 @@ msgstr "Type filter"
 msgid "Allow users to filter by article type."
 msgstr "Tillad brugere at filtrere via artikel type."
 
+msgid "Categories"
+msgstr "Kategorier"
+
 msgid "Category filter"
 msgstr "Kategori filter"
 
 msgid "Allow users to filter by category."
 msgstr "Tillad brugere at filtrere via artikel kategori."
+
+msgid "How many articles to show at once."
+msgstr "Hvor mange artikler skal vises på en gang."
 
 msgid "Page size select"
 msgstr "Side størrelses valg"
