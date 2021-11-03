@@ -83,7 +83,6 @@ class ArticleFilterWidget extends WidgetBase {
       ];
     }
 
-    //dpm($item->getValue() ?? []);
     $element['categories'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Categories'),
@@ -99,7 +98,15 @@ class ArticleFilterWidget extends WidgetBase {
       '#default_value' => $item->count ?? 5,
     ];
 
-    if ($this->getFieldSetting('allow_filters')) {
+    $element['sort'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Sort criteria'),
+      '#description' => $this->t('What criteria to sort articles by.'),
+      '#options' => $this->articleManager->getSortCriterias(),
+      '#default_value' => $item->sort ?? 'newest',
+    ];
+
+    if ($this->getFieldSetting('allow_form_elements')) {
       $element['pagination'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Pagination'),
@@ -128,11 +135,18 @@ class ArticleFilterWidget extends WidgetBase {
         '#default_value' => !empty($item->category_filter),
       ];
 
-      $element['count_filter'] = [
+      $element['count_select'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Page size select'),
         '#description' => $this->t('Allow users to select articles per page.'),
-        '#default_value' => !empty($item->count_filter),
+        '#default_value' => !empty($item->count_select),
+      ];
+
+      $element['sort_select'] = [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Sort select'),
+        '#description' => $this->t('Allow users to select the sort criteria.'),
+        '#default_value' => !empty($item->sort_select),
       ];
     } else {
       $element['pagination'] = [
@@ -147,7 +161,11 @@ class ArticleFilterWidget extends WidgetBase {
         '#type' => 'hidden',
         '#default_value' => '',
       ];
-      $element['count_filter'] = [
+      $element['count_select'] = [
+        '#type' => 'hidden',
+        '#default_value' => '',
+      ];
+      $element['sort_select'] = [
         '#type' => 'hidden',
         '#default_value' => '',
       ];
@@ -191,7 +209,8 @@ class ArticleFilterWidget extends WidgetBase {
     $values['pagination'] = boolval($values['pagination']);
     $values['type_filter'] = empty($values['type_filter']) ? '' : 'checkboxes';
     $values['category_filter'] = empty($values['category_filter']) ? '' : 'radios';
-    $values['count_filter'] = empty($values['count_filter']) ? '' : 'select';
+    $values['count_select'] = empty($values['count_select']) ? '' : 'select';
+    $values['sort_select'] = empty($values['sort_select']) ? '' : 'select';
 
     return $values;
   }

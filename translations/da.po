@@ -60,6 +60,9 @@ msgstr "Hvilke artikel typer at vise. Vælg ingen for at vise alle."
 msgid "What article categories to display. Choose none to display all."
 msgstr "Hvilke artikel kategorier at vise. Vælg ingen for at vise alle."
 
+msgid "Allow selecting form elements"
+msgstr "Tillad valg af formular elementer"
+
 msgid "Display pager at the bottom."
 msgstr "Vis pager i bunden."
 
@@ -76,10 +79,19 @@ msgid "Allow users to filter by category."
 msgstr "Tillad brugere at filtrere via artikel kategori."
 
 msgid "Page size select"
-msgstr "Side størrelse indstilling"
+msgstr "Side størrelses valg"
 
 msgid "Allow users to select articles per page."
 msgstr "Tillad brugere at vælge artikler per side."
+
+msgid "What criteria to sort articles by."
+msgstr "Hvilket kriterie skal artikler sorteres efter."
+
+msgid "Sort select"
+msgstr "Sorterings valg"
+
+msgid "Allow users to select the sort criteria."
+msgstr "Tillad brugere at vælge sorteringskriterie."
 
 msgid "A block showing articles with options for filters and pagination."
 msgstr "En blok der viser artikler med instillinger til filtre og paginering."

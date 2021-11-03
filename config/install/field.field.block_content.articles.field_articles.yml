@@ -20,9 +20,11 @@ default_value:
     categories: {  }
     count: 5
     pagination: false
+    sort: newest
     type_filter: ''
     category_filter: ''
-    count_filter: ''
+    count_select: ''
+    sort_select: ''
 default_value_callback: ''
 settings: {  }
 field_type: article_filter

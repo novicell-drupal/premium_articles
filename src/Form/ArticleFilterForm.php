@@ -63,6 +63,7 @@ class ArticleFilterForm extends FormBase {
     $form_state->set('count',  $this->request->query->get('count') ?? $form_state->get('count') ?? $options['count'] ?? 5);
     $form_state->set('view_mode',  $form_state->get('view_mode') ?? $options['view_mode'] ?? 'teaser');
     $form_state->set('pagination',  $form_state->get('pagination') ?? $options['pagination'] ?? FALSE);
+    $form_state->set('sort',  $form_state->get('sort') ?? $options['sort'] ?? 'newest');
 
     if ($form_state->hasValue('types')) {
       if (empty($form_state->getValue('types'))) {
@@ -95,6 +96,14 @@ class ArticleFilterForm extends FormBase {
         $form_state->set('count', 0);
       } else {
         $form_state->set('count', intval($form_state->getValue('count')));
+      }
+    }
+
+    if ($form_state->hasValue('sort')) {
+      if (empty($form_state->getValue('sort'))) {
+        $form_state->set('sort', 'newest');
+      } else {
+        $form_state->set('sort', $form_state->getValue('sort'));
       }
     }
 
@@ -135,11 +144,27 @@ class ArticleFilterForm extends FormBase {
       ];
     }
 
-    if (!empty($options['count_filter'])) {
+    if (!empty($options['count_select'])) {
       $form['filters']['count'] = [
         '#type' => 'select',
         '#options' => $this->articleManager->getCountOptions(),
         '#default_value' => empty($form_state->get('count')) ? 5 : $form_state->get('count'),
+        '#ajax' => [
+          'callback' => '::contentCallback',
+          'event' => 'change',
+          'wrapper' => 'article-form-contents',
+          'progress' => [
+            'type' => 'throbber',
+          ],
+        ]
+      ];
+    }
+
+    if (!empty($options['sort_select'])) {
+      $form['filters']['sort'] = [
+        '#type' => 'select',
+        '#options' => $this->articleManager->getSortCriterias(),
+        '#default_value' => empty($form_state->get('sort')) ? 'newest' : $form_state->get('sort'),
         '#ajax' => [
           'callback' => '::contentCallback',
           'event' => 'change',
@@ -196,6 +221,7 @@ class ArticleFilterForm extends FormBase {
       'count' => $form_state->get('count'),
       'view_mode' => $form_state->get('view_mode'),
       'pagination' => $form_state->get('pagination'),
+      'sort' => $form_state->get('sort'),
     ];
     $page = $form_state->get('page') ?? 0;
 

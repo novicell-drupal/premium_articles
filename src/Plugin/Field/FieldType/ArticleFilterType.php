@@ -42,7 +42,7 @@ class ArticleFilterType extends FieldItemBase {
    */
   public static function defaultStorageSettings() {
     return [
-        'allow_filters' => FALSE,
+        'allow_form_elements' => FALSE,
       ] + parent::defaultStorageSettings();
   }
 
@@ -50,11 +50,11 @@ class ArticleFilterType extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $setting = $this->getSetting('allow_filters');
+    $setting = $this->getSetting('allow_form_elements');
 
-    $element['allow_filters'] = [
+    $element['allow_form_elements'] = [
       '#type' => 'checkbox',
-      '#title' => t('Allow exposing filters'),
+      '#title' => t('Allow selecting form elements'),
       '#default_value' => $setting,
     ];
 
@@ -99,6 +99,9 @@ class ArticleFilterType extends FieldItemBase {
     $properties['count'] = DataDefinition::create('integer')
       ->setLabel(t('Default result count'))
       ->setRequired(TRUE);
+    $properties['sort'] = DataDefinition::create('string')
+      ->setLabel(t('Sort criteria'))
+      ->setRequired(TRUE);
     $properties['pagination'] = DataDefinition::create('boolean')
       ->setLabel(t('Use pager'))
       ->setRequired(TRUE);
@@ -108,8 +111,11 @@ class ArticleFilterType extends FieldItemBase {
     $properties['category_filter'] = DataDefinition::create('string')
       ->setLabel(t('Category filter'))
       ->setRequired(TRUE);
-    $properties['count_filter'] = DataDefinition::create('string')
-      ->setLabel(t('Count filter'))
+    $properties['count_select'] = DataDefinition::create('string')
+      ->setLabel(t('Count select'))
+      ->setRequired(TRUE);
+    $properties['sort_select'] = DataDefinition::create('string')
+      ->setLabel(t('Sort select'))
       ->setRequired(TRUE);
 
     return $properties;
@@ -133,6 +139,10 @@ class ArticleFilterType extends FieldItemBase {
           'type' => 'int',
           'size' => 'tiny',
         ],
+        'sort' => [
+          'type' => 'varchar',
+          'length' => 32,
+        ],
         'type_filter' => [
           'type' => 'varchar',
           'length' => 32,
@@ -141,7 +151,11 @@ class ArticleFilterType extends FieldItemBase {
           'type' => 'varchar',
           'length' => 32,
         ],
-        'count_filter' => [
+        'count_select' => [
+          'type' => 'varchar',
+          'length' => 32,
+        ],
+        'sort_select' => [
           'type' => 'varchar',
           'length' => 32,
         ],

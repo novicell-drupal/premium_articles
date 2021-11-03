@@ -9,7 +9,7 @@ field_name: field_articles_form
 entity_type: block_content
 type: article_filter
 settings:
-  allow_filters: 1
+  allow_form_elements: 1
 module: premium_articles
 locked: false
 cardinality: 1

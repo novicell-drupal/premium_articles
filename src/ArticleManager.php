@@ -61,6 +61,13 @@ class ArticleManager {
     ];
   }
 
+  public function getSortCriterias() {
+    return [
+      'newest' => t('Newest first'),
+      'oldest' => t('Oldest first'),
+    ];
+  }
+
   /**
    * @return array
    */
@@ -120,6 +127,14 @@ class ArticleManager {
       $query->pager($filter['count']);
     } elseif (isset($filter['count'])) {
       $query->range($page * $filter['count'], $filter['count']);
+    }
+    switch ($filter['sort']) {
+      case 'oldest':
+        $query->sort('field_list_date', 'ASC');
+        break;
+      default:
+        $query->sort('field_list_date', 'DESC');
+        break;
     }
 
     $nids = $query->execute();

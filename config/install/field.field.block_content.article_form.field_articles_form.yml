@@ -20,9 +20,11 @@ default_value:
     categories: {  }
     count: 20
     pagination: true
+    sort: newest
     type_filter: checkboxes
     category_filter: ''
-    count_filter: ''
+    count_select: ''
+    sort_select: select
 default_value_callback: ''
 settings: {  }
 field_type: article_filter
