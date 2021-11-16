@@ -24,6 +24,7 @@ class ArticleFormFormatter extends ArticleListFormatter {
 
     foreach ($items as $delta => $item) {
       $options = $item->getValue();
+      $options['entity_bundle'] = $items->getSetting('entity_bundle');
       $options['view_mode'] = $this->getSetting('view_mode');
       $elements[$delta] = \Drupal::formBuilder()->getForm('Drupal\premium_articles\Form\ArticleFilterForm', $options);
     }

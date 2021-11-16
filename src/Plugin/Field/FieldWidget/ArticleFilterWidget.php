@@ -34,18 +34,7 @@ class ArticleFilterWidget extends WidgetBase {
   protected $articleManager;
 
   /**
-   * Constructs a WidgetBase object.
-   *
-   * @param string $plugin_id
-   *   The plugin_id for the widget.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the widget is associated.
-   * @param array $settings
-   *   The widget settings.
-   * @param array $third_party_settings
-   *   Any third party settings.
+   * {@inheritdoc}
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ArticleManager $articleManager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
@@ -62,34 +51,36 @@ class ArticleFilterWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var FieldItemInterface $item */
     $item = $items[$delta] ?? [];
+    $entity_bundle = $this->getFieldSetting('entity_bundle');
+    $fields = $this->articleManager->getFieldFormElements($entity_bundle);
 
     if (!empty($item) && $item->getEntity()->getEntityTypeId() == 'taxonomy_term') {
-      $element['types'] = [
-        '#type' => 'hidden',
-        '#default_value' => [$item->getEntity()->id()]
-      ];
-      $element['types_title'] = [
-        '#type' => 'item',
-        '#title' => $this->t('Types'),
-        '#description' => $item->getEntity()->label() ?? $this->t('Show articles of this type.'),
-      ];
-    } else {
-      $element['types'] = [
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Types'),
-        '#description' => $this->t('What article types to display. Choose none to display all.'),
-        '#options' => $this->articleManager->getTypes(),
-        '#default_value' => $item->types ?? []
-      ];
+      $vid = $item->getEntity()->bundle();
+      foreach ($fields as $field_name => $form_element) {
+        if ($form_element['vid'] == $vid) {
+          $element[$field_name . '_title'] = [
+            '#type' => 'item',
+            '#title' => $form_element['label'],
+            '#description' => $item->getEntity()->label() ?? $this->t('Show articles of this type.'),
+          ];
+          $element['fields'][$field_name] = [
+            '#type' => 'hidden',
+            '#default_value' => $item->getEntity()->id()
+          ];
+          unset($fields[$field_name]);
+        }
+      }
     }
 
-    $element['categories'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t('Categories'),
-      '#description' => $this->t('What article categories to display. Choose none to display all.'),
-      '#options' => $this->articleManager->getCategories(),
-      '#default_value' => $item->categories ?? []
-    ];
+    foreach ($fields as $field_name => $form_element) {
+      $element['fields'][$field_name] = [
+        '#type' => $form_element['form_element'],
+        '#title' => $form_element['label'],
+        '#description' => $this->t('If none are selected, all are allowed.'),
+        '#options' => $form_element['options'],
+        '#default_value' => $item->fields[$field_name] ?? []
+      ];
+    }
 
     $element['count'] = [
       '#type' => 'number',
@@ -106,68 +97,37 @@ class ArticleFilterWidget extends WidgetBase {
       '#default_value' => $item->sort ?? 'newest',
     ];
 
-    if ($this->getFieldSetting('allow_form_elements')) {
+    if ($this->getFieldSetting('allow_facets')) {
+      $filter_options = [];
+      foreach ($fields as $field_name => $form_element) {
+        $filter_options[$field_name] = $form_element['label'];
+      }
+      $filter_options['count'] = $this->t('Page size select');
+      $filter_options['sort'] = $this->t('Sort select');
+      if (!empty($filter_options)) {
+        $element['facets'] = [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Facets'),
+          '#description' => $this->t('Select the facets that you want to expose to the user.'),
+          '#options' => $filter_options,
+          '#default_value' => $item->facets ?? [],
+        ];
+      }
+
       $element['pagination'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Pagination'),
         '#description' => $this->t('Display pager at the bottom.'),
         '#default_value' => $item->pagination ?? FALSE,
       ];
-
-      if (!empty($item) && $item->getEntity()->getEntityTypeId() == 'taxonomy_term') {
-        $element['type_filter'] = [
-          '#type' => 'hidden',
-          '#default_value' => ''
-        ];
-      } else {
-        $element['type_filter'] = [
-          '#type' => 'checkbox',
-          '#title' => $this->t('Type filter'),
-          '#description' => $this->t('Allow users to filter by article type.'),
-          '#default_value' => !empty($item->type_filter),
-        ];
-      }
-
-      $element['category_filter'] = [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Category filter'),
-        '#description' => $this->t('Allow users to filter by category.'),
-        '#default_value' => !empty($item->category_filter),
-      ];
-
-      $element['count_select'] = [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Page size select'),
-        '#description' => $this->t('Allow users to select articles per page.'),
-        '#default_value' => !empty($item->count_select),
-      ];
-
-      $element['sort_select'] = [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Sort select'),
-        '#description' => $this->t('Allow users to select the sort criteria.'),
-        '#default_value' => !empty($item->sort_select),
-      ];
     } else {
+      $element['facets'] = [
+        '#type' => 'hidden',
+        '#default_value' => '',
+      ];
       $element['pagination'] = [
         '#type' => 'hidden',
         '#default_value' => FALSE,
-      ];
-      $element['type_filter'] = [
-        '#type' => 'hidden',
-        '#default_value' => '',
-      ];
-      $element['category_filter'] = [
-        '#type' => 'hidden',
-        '#default_value' => '',
-      ];
-      $element['count_select'] = [
-        '#type' => 'hidden',
-        '#default_value' => '',
-      ];
-      $element['sort_select'] = [
-        '#type' => 'hidden',
-        '#default_value' => '',
       ];
     }
 
@@ -185,32 +145,35 @@ class ArticleFilterWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
-    if (is_string($values['types'])) {
-      $values['types'] = [intval($values['types'])];
-    } else {
-      $types = [];
-      foreach ($values['types'] as $type) {
-        if ($type) {
-          $types[] = intval($type);
+    if (empty($values['facets'])) {
+      $values['facets'] = [];
+    }
+    if (is_string($values['facets'])) {
+      $values['facets'] = [$values['facets']];
+    } elseif (is_array($values['facets'])) {
+      $result = [];
+      foreach ($values['facets'] as $value) {
+        if (!empty($value)) {
+          $result[] = $value;
         }
       }
-      $values['types'] = $types;
+      $values['facets'] = $result;
     }
-    $categories = [];
-    foreach ($values['categories'] as $category) {
-      if ($category) {
-        $categories[] = intval($category);
-      }
-    }
-    $values['categories'] = $categories;
     if (is_string($values['count'])) {
       $values['count'] = intval($values['count']);
     }
+    foreach ($values['fields'] as $field_name => $selections) {
+      if (is_array($selections)) {
+        $result = [];
+        foreach ($selections as $key => $value) {
+          if (!empty($value)) {
+            $result[] = $value;
+          }
+        }
+        $values['fields'][$field_name] = $result;
+      }
+    }
     $values['pagination'] = boolval($values['pagination']);
-    $values['type_filter'] = empty($values['type_filter']) ? '' : 'checkboxes';
-    $values['category_filter'] = empty($values['category_filter']) ? '' : 'radios';
-    $values['count_select'] = empty($values['count_select']) ? '' : 'select';
-    $values['sort_select'] = empty($values['sort_select']) ? '' : 'select';
 
     return $values;
   }

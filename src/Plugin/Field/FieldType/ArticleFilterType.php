@@ -15,12 +15,15 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
+use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\options\Plugin\Field\FieldType\ListItemBase;
 use Drupal\options\Plugin\Field\FieldType\ListStringItem;
+use Drupal\premium_articles\ArticleManager;
 use Drupal\styles\StylesManager;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the Article Filter field type.
@@ -38,11 +41,25 @@ use Drupal\user\UserInterface;
 class ArticleFilterType extends FieldItemBase {
 
   /**
+   * @var \Drupal\premium_articles\ArticleManager
+   */
+  protected $articleManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
+    $this->articleManager = \Drupal::service('premium_articles.manager');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function defaultStorageSettings() {
     return [
-        'allow_form_elements' => FALSE,
+        'entity_bundle' => 'node.article',
+        'allow_facets' => FALSE,
       ] + parent::defaultStorageSettings();
   }
 
@@ -52,10 +69,17 @@ class ArticleFilterType extends FieldItemBase {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $setting = $this->getSetting('allow_form_elements');
 
-    $element['allow_form_elements'] = [
+    $element['entity_bundle'] = [
+      '#type' => 'select',
+      '#title' => t('Article entity bundle'),
+      '#options' => $this->articleManager->getEntityBundles(),
+      '#default_value' => $this->getSetting('entity_bundle'),
+    ];
+
+    $element['allow_facets'] = [
       '#type' => 'checkbox',
-      '#title' => t('Allow selecting form elements'),
-      '#default_value' => $setting,
+      '#title' => t('Allow exposing facets'),
+      '#default_value' => $this->getSetting('allow_facets'),
     ];
 
     return $element;
@@ -84,18 +108,9 @@ class ArticleFilterType extends FieldItemBase {
   }
 
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['types'] = ListDataDefinition::create('list')
-      ->setLabel(t('Types'))
-      ->setItemDefinition(DataReferenceTargetDefinition::create('integer')
-        ->setLabel(new TranslatableMarkup('@label ID', ['@label' => 'Taxonomy term']))
-        ->setSetting('unsigned', TRUE))
-      ->setRequired(FALSE);
-    $properties['categories'] = ListDataDefinition::create('list')
-      ->setLabel(t('Categories'))
-      ->setItemDefinition(DataReferenceTargetDefinition::create('integer')
-        ->setLabel(new TranslatableMarkup('@label ID', ['@label' => 'Taxonomy term']))
-        ->setSetting('unsigned', TRUE))
-      ->setRequired(FALSE);
+    $properties['fields'] = MapDataDefinition::create()
+      ->setLabel(t('Fields'))
+      ->setRequired(TRUE);
     $properties['count'] = DataDefinition::create('integer')
       ->setLabel(t('Default result count'))
       ->setRequired(TRUE);
@@ -103,20 +118,13 @@ class ArticleFilterType extends FieldItemBase {
       ->setLabel(t('Sort criteria'))
       ->setRequired(TRUE);
     $properties['pagination'] = DataDefinition::create('boolean')
-      ->setLabel(t('Use pager'))
+      ->setLabel(t('Pagination'))
       ->setRequired(TRUE);
-    $properties['type_filter'] = DataDefinition::create('string')
-      ->setLabel(t('Type filter'))
-      ->setRequired(TRUE);
-    $properties['category_filter'] = DataDefinition::create('string')
-      ->setLabel(t('Category filter'))
-      ->setRequired(TRUE);
-    $properties['count_select'] = DataDefinition::create('string')
-      ->setLabel(t('Count select'))
-      ->setRequired(TRUE);
-    $properties['sort_select'] = DataDefinition::create('string')
-      ->setLabel(t('Sort select'))
-      ->setRequired(TRUE);
+    $properties['facets'] = ListDataDefinition::create('list')
+      ->setLabel(t('Filters'))
+      ->setItemDefinition(DataReferenceTargetDefinition::create('string')
+        ->setLabel(new TranslatableMarkup('Field')))
+      ->setRequired(FALSE);
 
     return $properties;
   }
@@ -124,40 +132,26 @@ class ArticleFilterType extends FieldItemBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     return [
       'columns' => [
-        'types' => [
+        'fields' => [
+          'description' => 'Serialized array of default values of fields.',
           'type' => 'blob',
-          'serialize' => TRUE,
-        ],
-        'categories' => [
-          'type' => 'blob',
+          'size' => 'big',
           'serialize' => TRUE,
         ],
         'count' => [
           'type' => 'int',
         ],
-        'pagination' => [
-          'type' => 'int',
-          'size' => 'tiny',
-        ],
         'sort' => [
           'type' => 'varchar',
           'length' => 32,
         ],
-        'type_filter' => [
-          'type' => 'varchar',
-          'length' => 32,
+        'pagination' => [
+          'type' => 'int',
+          'size' => 'tiny',
         ],
-        'category_filter' => [
-          'type' => 'varchar',
-          'length' => 32,
-        ],
-        'count_select' => [
-          'type' => 'varchar',
-          'length' => 32,
-        ],
-        'sort_select' => [
-          'type' => 'varchar',
-          'length' => 32,
+        'facets' => [
+          'type' => 'blob',
+          'serialize' => TRUE,
         ],
       ],
     ];
@@ -175,8 +169,8 @@ class ArticleFilterType extends FieldItemBase {
    */
   public function postSave($update) {
     if (!$update) {
-      if ($this->values['types'][0] == 0) {
-        $this->values['types'][0] = $this->getEntity()->id();
+      if (empty($this->values['fields']['field_article_type'][0])) {
+        $this->values['fields']['field_article_type'][0] = $this->getEntity()->id();
         return TRUE;
       }
     }

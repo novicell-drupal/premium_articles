@@ -16,16 +16,15 @@ required: false
 translatable: true
 default_value:
   -
-    types_title: ''
-    types: {  }
-    categories: {  }
+    fields:
+      field_article_type: {  }
+      field_article_categories: {  }
     count: 20
-    pagination: true
     sort: newest
-    type_filter: ''
-    category_filter: ''
-    count_select: ''
-    sort_select: select
+    pagination: true
+    facets:
+      - field_article_categories
+      - sort
 default_value_callback: ''
 settings: {  }
 field_type: article_filter

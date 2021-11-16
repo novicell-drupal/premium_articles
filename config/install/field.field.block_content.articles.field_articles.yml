@@ -1,4 +1,5 @@
-langcode: en
+uuid: a4fbf55a-ee3e-4537-bb84-dd36bfa071d7
+langcode: da
 status: true
 dependencies:
   config:
@@ -16,15 +17,13 @@ required: false
 translatable: true
 default_value:
   -
-    types: {  }
-    categories: {  }
+    fields:
+      field_article_type: {  }
+      field_article_categories: {  }
     count: 5
-    pagination: false
     sort: newest
-    type_filter: ''
-    category_filter: ''
-    count_select: ''
-    sort_select: ''
+    pagination: false
+    facets: {  }
 default_value_callback: ''
 settings: {  }
 field_type: article_filter

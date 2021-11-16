@@ -5,6 +5,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Pager\Pager;
 use Drupal\node\Entity\Node;
+use JetBrains\PhpStorm\Pure;
 
 class ArticleManager {
 
@@ -15,6 +16,88 @@ class ArticleManager {
 
   function __construct(EntityTypeManagerInterface $entityTypeManager) {
     $this->taxonomyStorage = $entityTypeManager->getStorage('taxonomy_term');
+  }
+
+  /**
+   * @return array
+   */
+  public function getEntityBundles() {
+    // TODO: Rewrite to use actial configs
+    return [
+      'node.article' => t('Article')
+    ];
+  }
+
+  public function getEntityBundleConfig($entity_bundle) {
+    // TODO: Rewrite to use actial configs
+    return [
+      'id' => $entity_bundle,
+      'entity_type_id' => 'node',
+      'bundle' => 'article',
+      'fields' => [
+        'field_article_type' => 'checkboxes',
+        'field_article_categories' => 'checkboxes'
+      ],
+      'sort_field' => 'field_list_date'
+    ];
+  }
+
+  /**
+   * @param $entity_bundle
+   * @return array
+   */
+  public function getFieldFormElements($entity_bundle) {
+    // TODO: Get more information from field definitions and cache it
+    $fields = $this->getEntityBundleConfig($entity_bundle)['fields'];
+    $elements = [];
+    foreach ($fields as $field => $form_element) {
+      $elements[$field] = $this->getFieldFormElement($entity_bundle, $field, $form_element);
+    }
+    return $elements;
+  }
+
+  public function getFieldFormElement($entity_bundle, $field_name, $element_type) {
+    $element = [
+      'form_element' => $element_type,
+    ];
+
+    $entity_info = explode('.', $entity_bundle);
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
+    $entityFieldManager = \Drupal::service('entity_field.manager');
+    $definitions = $entityFieldManager->getFieldDefinitions($entity_info[0], $entity_info[1]);
+    $definition = $definitions[$field_name];
+    switch ($definition->getType()) {
+      case 'entity_reference':
+        $settings = $definition->getSettings() ?? [];
+        if ($settings['target_type'] == 'taxonomy_term') {
+          if (count($settings['handler_settings']['target_bundles']) == 1) {
+            $element['label'] = $definition->getLabel();
+            $element['source'] = 'taxonomy_term';
+            $element['options'] = [];
+            $vid = reset($settings['handler_settings']['target_bundles']);
+            $element['vid'] = $vid;
+            $query = $this->taxonomyStorage->getQuery();
+            $query->condition('vid', $vid)
+              ->sort($settings['handler_settings']['sort']['field'], $settings['handler_settings']['sort']['direction']);
+            $tids = $query->execute();
+            $terms = $this->taxonomyStorage->loadMultiple($tids);
+            foreach ($terms as $term) {
+              $element['options'][$term->id()] = $term->label();
+            }
+          } else {
+            \Drupal::logger('premium_articles')->error('Field %field is not supported by Premium Articles', ['%field' => $field_name]);
+            return [];
+          }
+        } else {
+          \Drupal::logger('premium_articles')->error('Field %field is not supported by Premium Articles', ['%field' => $field_name]);
+          return [];
+        }
+        break;
+      default:
+        \Drupal::logger('premium_articles')->error('Field %field is not supported by Premium Articles', ['%field' => $field_name]);
+        return [];
+    }
+    return $element;
   }
 
   /**
@@ -77,50 +160,26 @@ class ArticleManager {
     return $repository->getViewModeOptionsByBundle('node', 'article');
   }
 
-  protected function getArticleQuery($filter, $page = 0) {
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'article')
-      ->condition('status', 1);
-    if (count($filter['types']) > 0) {
-      $query->condition('field_article_type', $filter['types'], 'IN');
-    }
-    if (count($filter['categories']) > 0) {
-      $query->condition('field_article_categories', $filter['categories'], 'IN');
-    }
-    return $query;
-  }
-
-  /**
-   * @param array $filter
-   *
-   * @return Pager
-   */
-  public function getArticleCount($filter) {
-    $query = $this->getArticleQuery($filter);
-    $query->count();
-    $count = $query->execute();
-
-    /** @var \Drupal\Core\Pager\PagerManagerInterface $pagerManager */
-    $pagerManager = \Drupal::service('pager.manager');
-    $pager = $pagerManager->createPager($count, $filter['count']);
-    return $pager;
-  }
-
   /**
    * @param array $filter
    * @param int $page
    *
    * @return Node[]
    */
-  public function getArticles($filter, $page = 0) {
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'article')
+  public function getArticles($entity_bundle, $filter = [], $page = 0) {
+    $entity_info = explode('.', $entity_bundle);
+    $query = \Drupal::entityQuery($entity_info[0])
+      ->condition('type', $entity_info[1])
       ->condition('status', 1);
-    if (count($filter['types']) > 0) {
-      $query->condition('field_article_type', $filter['types'], 'IN');
-    }
-    if (count($filter['categories']) > 0) {
-      $query->condition('field_article_categories', $filter['categories'], 'IN');
+    foreach ($filter['fields'] as $field_name => $value) {
+      if (empty($value)) {
+        continue;
+      }
+      if (is_array($value)) {
+        $query->condition($field_name, $value, 'IN');
+      } else {
+        $query->condition($field_name, $value);
+      }
     }
     if ($filter['pagination']) {
       \Drupal::requestStack()->getCurrentRequest()->query->set('page', $page);

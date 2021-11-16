@@ -64,7 +64,8 @@ class ArticleListFormatter extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      $nodes = $this->articleManager->getArticles($item->getValue());
+      $entity_bundle = $items->getSetting('entity_bundle');
+      $nodes = $this->articleManager->getArticles($entity_bundle, $item->getValue());
       $elements[$delta] = \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple($nodes, $this->getSetting('view_mode'));
       $elements[$delta]['#cache']['tags'][] = 'node_list';
     }

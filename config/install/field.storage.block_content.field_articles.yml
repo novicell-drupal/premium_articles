@@ -9,7 +9,8 @@ field_name: field_articles
 entity_type: block_content
 type: article_filter
 settings:
-  allow_form_elements: 0
+  entity_bundle: node.article
+  allow_facets: 0
 module: premium_articles
 locked: false
 cardinality: 1

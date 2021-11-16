@@ -55,134 +55,99 @@ class ArticleFilterForm extends FormBase {
     $form['#attributes']['class'][] = 'article-form';
     $form['#cache']['tags'][] = 'node_list';
 
-    if (is_null($form_state->get('page'))) {
-      $form_state->set('page', $this->request->query->get('page') ?? 0);
-    }
-    $form_state->set('types',  $this->request->query->get('types') ?? $form_state->get('types') ?? $options['types'] ?? []);
-    $form_state->set('categories',  $this->request->query->get('categories') ?? $form_state->get('categories') ?? $options['categories'] ?? []);
-    $form_state->set('count',  $this->request->query->get('count') ?? $form_state->get('count') ?? $options['count'] ?? 5);
-    $form_state->set('view_mode',  $form_state->get('view_mode') ?? $options['view_mode'] ?? 'teaser');
-    $form_state->set('pagination',  $form_state->get('pagination') ?? $options['pagination'] ?? FALSE);
-    $form_state->set('sort',  $form_state->get('sort') ?? $options['sort'] ?? 'newest');
-
-    if ($form_state->hasValue('types')) {
-      if (empty($form_state->getValue('types'))) {
-        $form_state->set('types', []);
-      } elseif (!is_array($form_state->getValue('types'))) {
-        $form_state->set('types', [$form_state->getValue('types')]);
-      } else {
-        $types = [];
-        foreach ($form_state->getValue('types') as $key => $value) {
-          if ($value) {
-            $types[] = $key;
+    $values = $options;
+    $values['page'] = 0;
+    unset($values['facets']);
+    unset($values['_attributes']);
+    foreach ($values as $key => $value) {
+      if (!$form_state->has($key)) {
+        $form_state->set($key, $value);
+      }
+      if ($this->request->query->has($key)) {
+        $form_state->set($key, $this->request->query->get($key));
+      }
+      if ($form_state->hasValue($key)) {
+        if (is_array($form_state->getValue($key))) {
+          $result = [];
+          foreach ($form_state->getValue($key) as $value2) {
+            if ($value2) {
+              $result[] = $value2;
+            }
           }
+          $form_state->set($key, $result);
+        } else {
+          $form_state->set($key, $form_state->getValue($key));
         }
-        $form_state->set('types', $types);
+      }
+    }
+    foreach ($values['fields'] as $key => $value) {
+      if ($this->request->query->has($key)) {
+        $form_state->set(['fields', $key], $this->request->query->get($key));
+      }
+      if ($form_state->hasValue($key)) {
+        if (is_array($form_state->getValue($key))) {
+          $result = [];
+          foreach ($form_state->getValue($key) as $value2) {
+            if ($value2) {
+              $result[] = $value2;
+            }
+          }
+          $form_state->set(['fields', $key], $result);
+        } else {
+          $form_state->set(['fields', $key], $form_state->getValue($key));
+        }
       }
     }
 
-    if ($form_state->hasValue('categories')) {
-      if (empty($form_state->getValue('categories'))) {
-        $form_state->set('categories', []);
-      } elseif (!is_array($form_state->getValue('categories'))) {
-        $form_state->set('categories', [$form_state->getValue('categories')]);
-      } else {
-        $form_state->set('categories', $form_state->getValue('categories'));
+    $ajax = [
+      'callback' => '::contentCallback',
+      'event' => 'change',
+      'wrapper' => 'article-form-contents',
+      'progress' => [
+        'type' => 'throbber',
+      ],
+    ];
+    $form['facets'] = [];
+    $fields = $this->articleManager->getFieldFormElements($options['entity_bundle']);
+    foreach ($fields as $field_name => $form_element) {
+      if (in_array($field_name, $options['facets'])) {
+        $form['facets'][$field_name] = [
+          '#type' => $form_element['form_element'],
+          '#title' => $form_element['label'],
+          '#options' => $form_element['options'],
+          '#ajax' => $ajax
+        ];
+        if ($form_state->has(['fields', $field_name])) {
+          $form['facets'][$field_name]['#default_value'] = $form_state->get(['fields', $field_name]);
+        }
       }
     }
 
-    if ($form_state->hasValue('count')) {
-      if (empty($form_state->getValue('count'))) {
-        $form_state->set('count', 0);
-      } else {
-        $form_state->set('count', intval($form_state->getValue('count')));
-      }
-    }
-
-    if ($form_state->hasValue('sort')) {
-      if (empty($form_state->getValue('sort'))) {
-        $form_state->set('sort', 'newest');
-      } else {
-        $form_state->set('sort', $form_state->getValue('sort'));
-      }
-    }
-
-    $form['filters'] = [];
-    if (!empty($options['type_filter'])) {
-      $form['filters']['types'] = [
-        '#type' => 'checkboxes',
-        '#options' => $this->articleManager->getTypes(),
-        '#default_value' => empty($form_state->get('types')) ? [] : $form_state->get('types'),
-        '#ajax' => [
-          'callback' => '::contentCallback',
-          'event' => 'change',
-          'wrapper' => 'article-form-contents',
-          'progress' => [
-            'type' => 'throbber',
-          ],
-        ]
-      ];
-    }
-
-    if (!empty($options['category_filter'])) {
-      $radios = [
-        0 => $this->t('All')
-      ];
-      $radios += $this->articleManager->getCategories();
-      $form['filters']['categories'] = [
-        '#type' => 'radios',
-        '#options' => $radios,
-        '#default_value' => empty($form_state->get('categories')) ? 0 : reset($form_state->get('categories')),
-        '#ajax' => [
-          'callback' => '::contentCallback',
-          'event' => 'change',
-          'wrapper' => 'article-form-contents',
-          'progress' => [
-            'type' => 'throbber',
-          ],
-        ]
-      ];
-    }
-
-    if (!empty($options['count_select'])) {
-      $form['filters']['count'] = [
+    if (in_array('count', $options['facets'])) {
+      $form['facets']['count'] = [
         '#type' => 'select',
         '#options' => $this->articleManager->getCountOptions(),
         '#default_value' => empty($form_state->get('count')) ? 5 : $form_state->get('count'),
-        '#ajax' => [
-          'callback' => '::contentCallback',
-          'event' => 'change',
-          'wrapper' => 'article-form-contents',
-          'progress' => [
-            'type' => 'throbber',
-          ],
-        ]
+        '#ajax' => $ajax
       ];
     }
 
-    if (!empty($options['sort_select'])) {
-      $form['filters']['sort'] = [
+    if (in_array('sort', $options['facets'])) {
+      $form['facets']['sort'] = [
         '#type' => 'select',
         '#options' => $this->articleManager->getSortCriterias(),
         '#default_value' => empty($form_state->get('sort')) ? 'newest' : $form_state->get('sort'),
-        '#ajax' => [
-          'callback' => '::contentCallback',
-          'event' => 'change',
-          'wrapper' => 'article-form-contents',
-          'progress' => [
-            'type' => 'throbber',
-          ],
-        ]
+        '#ajax' => $ajax
       ];
     }
 
-    if (!empty($form['filters'])) {
-      $form['filters']['#type'] = 'container';
+    if (!empty($form['facets'])) {
+      $form['facets']['#type'] = 'container';
     }
 
-    $page = $form_state->get('page') ?? 0;
     $form['content'] = $this->buildContents($form_state);
 
+    $page = $form_state->get('page') ?? 0;
     if ($form_state->get('pagination')) {
       $form['#attached']['library'] = ['premium_articles/pager'];
       $form['page'] = [
@@ -216,17 +181,17 @@ class ArticleFilterForm extends FormBase {
    */
   public function buildContents(FormStateInterface $form_state) {
     $options = [
-      'types' => $form_state->get('types'),
-      'categories' => $form_state->get('categories'),
+      'fields' => $form_state->get('fields'),
       'count' => $form_state->get('count'),
       'view_mode' => $form_state->get('view_mode'),
       'pagination' => $form_state->get('pagination'),
       'sort' => $form_state->get('sort'),
     ];
+    $entity_bundle = $form_state->get('entity_bundle') ?? 'node.article';
     $page = $form_state->get('page') ?? 0;
 
     if (!$this->request->isXmlHttpRequest() || $form_state->isRebuilding()) {
-      $nodes = $this->articleManager->getArticles($options, $page);
+      $nodes = $this->articleManager->getArticles($entity_bundle, $options, $page);
     } else {
       $nodes = [];
     }

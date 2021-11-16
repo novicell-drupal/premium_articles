@@ -9,7 +9,8 @@ field_name: field_overview
 entity_type: taxonomy_term
 type: article_filter
 settings:
-  allow_form_elements: 1
+  entity_bundle: node.article
+  allow_facets: 1
 module: premium_articles
 locked: false
 cardinality: 1
