@@ -105,6 +105,18 @@ msgstr "En blok der viser artikler med instillinger til filtre og paginering."
 msgid "A block listing a few articles."
 msgstr "En blok der lister et par artikler."
 
+msgid "Add article"
+msgstr "Tilføj artikel"
+
+msgid "Add article config"
+msgstr "Tilføj artikel konfiguration"
+
+msgid "Configure Premium Articles"
+msgstr "Konfigurer Premium Articles"
+
+msgid "Configure premium articles."
+msgstr "Konfigurer premium articles."
+
 msgid "There are no article configurations yet."
 msgstr "Der er ingen artikel konfigurationer endnu."
 
