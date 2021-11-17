@@ -112,10 +112,10 @@ msgid "Add article config"
 msgstr "Tilføj artikel konfiguration"
 
 msgid "Configure Premium Articles"
-msgstr "Konfigurer Premium Articles"
+msgstr "Konfigurer Premium Artikler"
 
 msgid "Configure premium articles."
-msgstr "Konfigurer premium articles."
+msgstr "Konfigurer premium artikler."
 
 msgid "There are no article configurations yet."
 msgstr "Der er ingen artikel konfigurationer endnu."

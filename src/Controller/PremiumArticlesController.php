@@ -2,6 +2,7 @@
 
 namespace Drupal\premium_articles\Controller;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityDescriptionInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -16,11 +17,13 @@ class PremiumArticlesController extends ControllerBase {
   protected $entityTypeManager;
   protected $entityTypeBundleInfo;
   protected $renderer;
+  protected $configFactory;
 
-  function __construct(EntityTypeManagerInterface $entityTypeManager, EntityTypeBundleInfoInterface $entityTypeBundleInfo, RendererInterface $renderer) {
+  function __construct(EntityTypeManagerInterface $entityTypeManager, EntityTypeBundleInfoInterface $entityTypeBundleInfo, RendererInterface $renderer, ConfigFactoryInterface $configFactory) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityTypeBundleInfo = $entityTypeBundleInfo;
     $this->renderer = $renderer;
+    $this->configFactory = $configFactory;
   }
 
   /**
@@ -30,7 +33,8 @@ class PremiumArticlesController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('config.factory')
     );
   }
 
@@ -63,13 +67,24 @@ class PremiumArticlesController extends ControllerBase {
       $bundles = $this->loadBundleDescriptions($bundles, $bundle_entity_type);
     }
 
+    $list = $this->configFactory->listAll('premium_articles.');
+    $excluded = [];
+    foreach ($list as $config_id) {
+      $config = $this->configFactory->get($config_id);
+      $excluded[] = $config->get('id');
+    }
+
     $form_route_name = 'premium_articles.add_form';
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {
+      $entity_bundle = $entity_type_id . '.' . $bundle_name;
+      if (in_array($entity_bundle, $excluded)) {
+        continue;
+      }
       $build['#bundles'][$bundle_name] = [
         'label' => $bundle_info['label'],
         'description' => isset($bundle_info['description']) ? $bundle_info['description'] : '',
-        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, ['entity_bundle' => $entity_type_id . '.' . $bundle_name]),
+        'add_link' => Link::createFromRoute($bundle_info['label'], $form_route_name, ['entity_bundle' => $entity_bundle]),
       ];
     }
 
