@@ -1,0 +1,39 @@
+premium_articles.list:
+  path: '/admin/config/content/premium_articles'
+  defaults:
+    _form: '\Drupal\premium_articles\Form\PremiumArticlesList'
+    _title: 'Premium Articles'
+  requirements:
+    _permission: 'configure premium articles'
+
+premium_articles.edit:
+  path: '/admin/config/content/premium_articles/edit/{entity_bundle}'
+  defaults:
+    _form: '\Drupal\premium_articles\Form\PremiumArticlesEdit'
+    _title_callback: '\Drupal\premium_articles\Form\PremiumArticlesEdit::getTitle'
+  requirements:
+    _permission: 'configure premium articles'
+
+premium_articles.add:
+  path: '/admin/config/content/premium_articles/add'
+  defaults:
+    _controller: '\Drupal\premium_articles\Controller\PremiumArticlesController::add'
+    _title: 'Add article config'
+  requirements:
+    _permission: 'configure premium articles'
+
+premium_articles.add_form:
+  path: '/admin/config/content/premium_articles/add/{entity_bundle}'
+  defaults:
+    _form: '\Drupal\premium_articles\Form\PremiumArticlesEdit'
+    _title: 'Add article config'
+  requirements:
+    _permission: 'configure premium articles'
+
+premium_articles.delete:
+  path: '/admin/config/content/premium_articles/delete/{entity_bundle}'
+  defaults:
+    _form: '\Drupal\premium_articles\Form\PremiumArticlesDelete'
+    _title: 'Delete article config'
+  requirements:
+    _permission: 'configure premium articles'

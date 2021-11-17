@@ -1,7 +1,10 @@
 <?php
 namespace Drupal\premium_articles;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Pager\Pager;
 use Drupal\node\Entity\Node;
@@ -14,32 +17,51 @@ class ArticleManager {
    */
   protected $taxonomyStorage;
 
-  function __construct(EntityTypeManagerInterface $entityTypeManager) {
+  /**
+   * @var ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * @var EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * @var EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
+   * @var EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  function __construct(EntityTypeManagerInterface $entityTypeManager, ConfigFactoryInterface $configFactory, EntityFieldManagerInterface $entityFieldManager, EntityTypeBundleInfoInterface $entityTypeBundleInfo) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->entityTypeBundleInfo = $entityTypeBundleInfo;
     $this->taxonomyStorage = $entityTypeManager->getStorage('taxonomy_term');
+    $this->configFactory = $configFactory;
   }
 
   /**
    * @return array
    */
   public function getEntityBundles() {
-    // TODO: Rewrite to use actial configs
-    return [
-      'node.article' => t('Article')
-    ];
+    $list = $this->configFactory->listAll('premium_articles.');
+    $result = [];
+    foreach ($list as $config_id) {
+      $config = $this->configFactory->get($config_id);
+      $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($config->get('entity_type_id'));
+      $result[$config->get('id')] = $bundle_info[$config->get('bundle')]['label'];
+    }
+    return $result;
   }
 
   public function getEntityBundleConfig($entity_bundle) {
-    // TODO: Rewrite to use actial configs
-    return [
-      'id' => $entity_bundle,
-      'entity_type_id' => 'node',
-      'bundle' => 'article',
-      'fields' => [
-        'field_article_type' => 'checkboxes',
-        'field_article_categories' => 'checkboxes'
-      ],
-      'sort_field' => 'field_list_date'
-    ];
+    $config = $this->configFactory->get('premium_articles.' . $entity_bundle);
+    return $config->getRawData();
   }
 
   /**
@@ -63,12 +85,13 @@ class ArticleManager {
 
     $entity_info = explode('.', $entity_bundle);
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager */
-    $entityFieldManager = \Drupal::service('entity_field.manager');
-    $definitions = $entityFieldManager->getFieldDefinitions($entity_info[0], $entity_info[1]);
+    $definitions = $this->entityFieldManager->getFieldDefinitions($entity_info[0], $entity_info[1]);
     $definition = $definitions[$field_name];
     switch ($definition->getType()) {
       case 'entity_reference':
         $settings = $definition->getSettings() ?? [];
+        $storage = $this->entityTypeManager->getStorage($settings['target_type']);
+        // TODO: Support more entity types than taxonomy
         if ($settings['target_type'] == 'taxonomy_term') {
           if (count($settings['handler_settings']['target_bundles']) == 1) {
             $element['label'] = $definition->getLabel();
@@ -76,11 +99,11 @@ class ArticleManager {
             $element['options'] = [];
             $vid = reset($settings['handler_settings']['target_bundles']);
             $element['vid'] = $vid;
-            $query = $this->taxonomyStorage->getQuery();
+            $query = $storage->getQuery();
             $query->condition('vid', $vid)
               ->sort($settings['handler_settings']['sort']['field'], $settings['handler_settings']['sort']['direction']);
             $tids = $query->execute();
-            $terms = $this->taxonomyStorage->loadMultiple($tids);
+            $terms = $storage->loadMultiple($tids);
             foreach ($terms as $term) {
               $element['options'][$term->id()] = $term->label();
             }
@@ -98,40 +121,6 @@ class ArticleManager {
         return [];
     }
     return $element;
-  }
-
-  /**
-   * @return array
-   */
-  public function getTypes() {
-    static $types = [];
-    if (empty($types)) {
-      $query = $this->taxonomyStorage->getQuery();
-      $query->condition('vid', "article_types");
-      $tids = $query->execute();
-      $terms = $this->taxonomyStorage->loadMultiple($tids);
-      foreach ($terms as $term) {
-        $types[$term->id()] = $term->label();
-      }
-    }
-    return $types;
-  }
-
-  /**
-   * @return array
-   */
-  public function getCategories() {
-    static $categories = [];
-    if (empty($categories)) {
-      $query = $this->taxonomyStorage->getQuery();
-      $query->condition('vid', "article_categories");
-      $tids = $query->execute();
-      $terms = $this->taxonomyStorage->loadMultiple($tids);
-      foreach ($terms as $term) {
-        $categories[$term->id()] = $term->label();
-      }
-    }
-    return $categories;
   }
 
   public function getCountOptions() {

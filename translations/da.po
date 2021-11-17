@@ -16,7 +16,7 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 
 msgid "Premium Articles"
-msgstr "Kerne funktionalitet til Drupal Premium distributionen."
+msgstr "Premium Artikler"
 
 msgid "Article functionality of the Drupal Premium distribution."
 msgstr "Kerne funktionalitet til Drupal Premium distributionen."
@@ -104,3 +104,21 @@ msgstr "En blok der viser artikler med instillinger til filtre og paginering."
 
 msgid "A block listing a few articles."
 msgstr "En blok der lister et par artikler."
+
+msgid "There are no article configurations yet."
+msgstr "Der er ingen artikel konfigurationer endnu."
+
+msgid "What fields can be used as facets?"
+msgstr "Hvilke felter kan bruges som facetter?"
+
+msgid "What field should be used for sorting?"
+msgstr "Hvilket felt skal bruges til sortering?"
+
+msgid "There is no new content types ready for articles."
+msgstr "Der er ingen nye indholdstyper der er klar til artikler."
+
+msgid "Are you sure you want to delete the article config %entity_bundle?"
+msgstr "Er du sikker på at du vil slette artikel konfigurationen %entity_bundle?"
+
+msgid "Article config %entity_bundle has been deleted."
+msgstr "Artikel konfigurationen %entity_bundle er blevet slettet."

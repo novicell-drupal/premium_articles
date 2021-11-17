@@ -1,3 +1,9 @@
+premium_articles.add_entity_bundle:
+  route_name: 'premium_articles.add'
+  title: 'Add article config'
+  appears_on:
+    - premium_articles.list
+
 premium_articles.add_article:
   route_name: 'node.add'
   route_parameters:
