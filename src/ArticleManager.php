@@ -137,6 +137,7 @@ class ArticleManager {
     return [
       'newest' => t('Newest first'),
       'oldest' => t('Oldest first'),
+      'alphabetical' => t('Alphabetical'),
     ];
   }
 
@@ -173,10 +174,13 @@ class ArticleManager {
     if ($filter['pagination']) {
       \Drupal::requestStack()->getCurrentRequest()->query->set('page', $page);
       $query->pager($filter['count']);
-    } elseif (isset($filter['count'])) {
+    } elseif (isset($filter['count']) && $filter['count'] > 0) {
       $query->range($page * $filter['count'], $filter['count']);
     }
     switch ($filter['sort']) {
+      case 'alphabetical':
+        $query->sort('name', 'ASC');
+        break;
       case 'oldest':
         $query->sort('field_list_date', 'ASC');
         break;

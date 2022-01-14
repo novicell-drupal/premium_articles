@@ -3,6 +3,7 @@ namespace Drupal\premium_articles\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 use Drupal\premium_articles\ArticleManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -202,7 +203,7 @@ class ArticleFilterForm extends FormBase {
         'class' => ['article-form-contents']
       ],
     ];
-    $content['articles'] = \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple($nodes, $options['view_mode']);
+    $this->buildArticlesInContent($content, $nodes, $options);
 
     if ($options['pagination']) {
       if (!$this->request->isXmlHttpRequest() || $form_state->isRebuilding()) {
@@ -212,6 +213,15 @@ class ArticleFilterForm extends FormBase {
       }
     }
     return $content;
+  }
+
+  /**
+   * @param array $content
+   * @param Node[] $nodes
+   * @param array $options
+   */
+  public function buildArticlesInContent(array &$content, array $nodes, array $options) {
+    $content['articles'] = \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple($nodes, $options['view_mode']);
   }
 
   /**
