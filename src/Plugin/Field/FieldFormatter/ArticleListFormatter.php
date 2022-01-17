@@ -104,7 +104,7 @@ class ArticleListFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = t('View mode: @view_mode', [
+    $summary[] = $this->t('View mode: @view_mode', [
       '@view_mode' => $this->getSetting('view_mode')
     ]);
 

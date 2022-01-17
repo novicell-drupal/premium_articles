@@ -133,11 +133,29 @@ class ArticleManager {
     ];
   }
 
+  /**
+   * Get list of supported sorting criteria
+   *
+   * @return array
+   */
   public function getSortCriterias() {
     return [
       'newest' => t('Newest first'),
       'oldest' => t('Oldest first'),
       'alphabetical' => t('Alphabetical'),
+    ];
+  }
+
+  /**
+   * Get list of supported displays of totals
+   *
+   * @return array
+   */
+  public function getShowTotalOptions() {
+    return [
+      '' => t('None'),
+      'filtered' => t('Filtered out of total number of items'),
+      'shown' => t('Shown items out of filtered number of items'),
     ];
   }
 
@@ -156,7 +174,7 @@ class ArticleManager {
    *
    * @return Node[]
    */
-  public function getArticles($entity_bundle, $filter = [], $page = 0) {
+  public function getArticles($entity_bundle, array $filter = [], $page = 0) {
     $entity_info = explode('.', $entity_bundle);
     $query = \Drupal::entityQuery($entity_info[0])
       ->condition('type', $entity_info[1])
@@ -192,6 +210,57 @@ class ArticleManager {
     $nids = $query->execute();
 
     return Node::loadMultiple($nids);
+  }
+
+  /**
+   * @param array $filter
+   * @param int $shown
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  public function getArticlesTotal($entity_bundle, array $filter = [], $shown = 0) {
+    $entity_info = explode('.', $entity_bundle);
+    $count = 0;
+    $total = 0;
+    switch ($filter['show_total']) {
+      case 'filtered':
+        $query = \Drupal::entityQuery($entity_info[0])
+          ->condition('type', $entity_info[1])
+          ->condition('status', 1)
+          ->count();
+        $total = $query->execute();
+        foreach ($filter['fields'] as $field_name => $value) {
+          if (empty($value)) {
+            continue;
+          }
+          if (is_array($value)) {
+            $query->condition($field_name, $value, 'IN');
+          } else {
+            $query->condition($field_name, $value);
+          }
+        }
+        $count = $query->execute();
+        break;
+      case 'shown':
+        $count = $shown;
+        $query = \Drupal::entityQuery($entity_info[0])
+          ->condition('type', $entity_info[1])
+          ->condition('status', 1)
+          ->count();
+        foreach ($filter['fields'] as $field_name => $value) {
+          if (empty($value)) {
+            continue;
+          }
+          if (is_array($value)) {
+            $query->condition($field_name, $value, 'IN');
+          } else {
+            $query->condition($field_name, $value);
+          }
+        }
+        $total = $query->execute();
+        break;
+    }
+    return t('Showing @count out of @total', ['@count' => $count, '@total' => $total]);
   }
 
 }

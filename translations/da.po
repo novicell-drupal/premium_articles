@@ -63,6 +63,21 @@ msgstr "Liste dato"
 msgid "List media"
 msgstr "Liste media"
 
+msgid "Display of total number of items"
+msgstr "Visning af total antal elementer"
+
+msgid "Total display: @show_total"
+msgstr "Total visning: @show_total"
+
+msgid "Filtered out of total number of items"
+msgstr "Filtrede ud af total antal elements"
+
+msgid "Shown items out of filtered number of items"
+msgstr "Vist elementer ud af filtrerede antal elementer"
+
+msgid "Showing @count out of @total"
+msgstr "Viser @count ud af @total"
+
 msgid "Find and manage articles."
 msgstr "Find og administrér artikler."
 

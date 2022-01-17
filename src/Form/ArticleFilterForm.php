@@ -52,7 +52,7 @@ class ArticleFilterForm extends FormBase {
    *
    * @return array
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $options = []) {
+  public function buildForm(array $form, FormStateInterface $form_state, array $options = []) {
     $form['#attributes']['class'][] = 'article-form';
     $form['#cache']['tags'][] = 'node_list';
 
@@ -187,6 +187,7 @@ class ArticleFilterForm extends FormBase {
       'view_mode' => $form_state->get('view_mode'),
       'pagination' => $form_state->get('pagination'),
       'sort' => $form_state->get('sort'),
+      'show_total' => $form_state->get('show_total')
     ];
     $entity_bundle = $form_state->get('entity_bundle') ?? 'node.article';
     $page = $form_state->get('page') ?? 0;
@@ -204,6 +205,12 @@ class ArticleFilterForm extends FormBase {
       ],
     ];
     $this->buildArticlesInContent($content, $nodes, $options);
+
+    if (!empty($options['show_total'])) {
+      $content['total'] = [
+        '#markup' => $this->articleManager->getArticlesTotal($entity_bundle, $options, count($nodes))
+      ];
+    }
 
     if ($options['pagination']) {
       if (!$this->request->isXmlHttpRequest() || $form_state->isRebuilding()) {
