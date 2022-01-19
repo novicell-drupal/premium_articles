@@ -93,9 +93,15 @@ class ArticleFilterForm extends FormBase {
               $result[] = $value2;
             }
           }
-          $form_state->set(['fields', $key], $result);
+          if ($form_state->get(['fields', $key]) != $result) {
+            $form_state->set('page', 0);
+            $form_state->set(['fields', $key], $result);
+          }
         } else {
-          $form_state->set(['fields', $key], $form_state->getValue($key));
+          if ($form_state->get(['fields', $key]) != $form_state->getValue($key)) {
+            $form_state->set('page', 0);
+            $form_state->set(['fields', $key], $form_state->getValue($key));
+          }
         }
       }
     }

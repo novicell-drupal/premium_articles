@@ -63,6 +63,9 @@ msgstr "Liste dato"
 msgid "List media"
 msgstr "Liste media"
 
+msgid "Alphabetical"
+msgstr "Alfabetisk"
+
 msgid "Display of total number of items"
 msgstr "Visning af total antal elementer"
 
