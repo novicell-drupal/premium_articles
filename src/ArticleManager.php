@@ -197,7 +197,7 @@ class ArticleManager {
     }
     switch ($filter['sort']) {
       case 'alphabetical':
-        $query->sort('name', 'ASC');
+        $query->sort('title', 'ASC');
         break;
       case 'oldest':
         $query->sort('field_list_date', 'ASC');
