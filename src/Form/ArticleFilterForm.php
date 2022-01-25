@@ -199,7 +199,7 @@ class ArticleFilterForm extends FormBase {
     $page = $form_state->get('page') ?? 0;
 
     if (!$this->request->isXmlHttpRequest() || $form_state->isRebuilding()) {
-      $nodes = $this->articleManager->getArticles($entity_bundle, $options, $page);
+      $nodes = $this->getArticlesForBuilding($entity_bundle, $options, $page);
     } else {
       $nodes = [];
     }
@@ -229,11 +229,26 @@ class ArticleFilterForm extends FormBase {
   }
 
   /**
+   * Function for retrieving the articles to be displayed. Overwrite for when a custom query is necessary.
+   *
+   * @param string $entity_bundle
+   * @param array $options
+   * @param int $page
+   *
+   * @return \Drupal\node\Entity\Node[]
+   */
+  protected function getArticlesForBuilding($entity_bundle, array $options, $page = 0) {
+    return $this->articleManager->getArticles($entity_bundle, $options, $page);
+  }
+
+  /**
+   * Function for building the display of the articles. Overwrite for building overviews with custom layouts and views.
+   *
    * @param array $content
    * @param Node[] $nodes
    * @param array $options
    */
-  public function buildArticlesInContent(array &$content, array $nodes, array $options) {
+  protected function buildArticlesInContent(array &$content, array $nodes, array $options) {
     $content['articles'] = \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple($nodes, $options['view_mode']);
   }
 

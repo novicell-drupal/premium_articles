@@ -169,6 +169,15 @@ class ArticleManager {
   }
 
   /**
+   * @param string $entity_field
+   *
+   * @return string
+   */
+  public function getSortField($entity_field) {
+    return $this->getEntityBundleConfig($entity_field)['sort_field'] ?? 'field_list_date';
+  }
+
+  /**
    * @param array $filter
    * @param int $page
    *
@@ -200,10 +209,10 @@ class ArticleManager {
         $query->sort('title', 'ASC');
         break;
       case 'oldest':
-        $query->sort('field_list_date', 'ASC');
+        $query->sort($this->getSortField($entity_bundle), 'ASC');
         break;
       default:
-        $query->sort('field_list_date', 'DESC');
+        $query->sort($this->getSortField($entity_bundle), 'DESC');
         break;
     }
 
