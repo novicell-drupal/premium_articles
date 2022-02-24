@@ -12,6 +12,7 @@ dependencies:
   - core:media_library
   - field_group:field_group
   - paragraphs_asymmetric_translation_widgets:paragraphs_asymmetric_translation_widgets
+  - html5history:html5history
 
 interface translation project: premium_articles
 interface translation server pattern: modules/contrib/premium_articles/translations/%language.po

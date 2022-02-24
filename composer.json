@@ -1,11 +1,16 @@
 {
-  "name": "novicell/premium_articles",
-  "type": "drupal-module",
-  "description": "Premium Articles",
-  "keywords": [
-    "Novicell"
-  ],
-  "license": "GPL-2.0+",
-  "homepage": "https://www.novicell.dk",
-  "minimum-stability": "dev"
+    "name": "novicell/premium_articles",
+    "type": "drupal-module",
+    "description": "Premium Articles",
+    "keywords": [
+        "Novicell"
+    ],
+    "license": "GPL-2.0+",
+    "homepage": "https://www.novicell.dk",
+    "minimum-stability": "dev",
+    "require": {
+        "drupal/field_group": "^3.0",
+        "drupal/paragraphs_asymmetric_translation_widgets": "^1.0@beta",
+        "drupal/html5history": "^1.0"
+    }
 }

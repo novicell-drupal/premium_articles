@@ -1,8 +1,14 @@
 <?php
 namespace Drupal\premium_articles\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\html5history\Ajax\HistoryBackCommand;
+use Drupal\html5history\Ajax\HistoryPushStateCommand;
+use Drupal\html5history\Ajax\HistoryReplaceStateCommand;
 use Drupal\node\Entity\Node;
 use Drupal\premium_articles\ArticleManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ArticleFilterForm extends FormBase {
+
+  protected array $options = [];
 
   /**
    * @var ArticleManager
@@ -55,8 +63,10 @@ class ArticleFilterForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, array $options = []) {
     $form['#attributes']['class'][] = 'article-form';
     $form['#cache']['tags'][] = 'node_list';
+    $form['#attached']['library'] = array_merge($form['#attached']['library'] ?? [], ['html5history/html5history.ajax']);
 
-    $values = $options;
+    $this->options = $options;
+    $values = $this->options;
     $values['page'] = 0;
     unset($values['facets']);
     unset($values['_attributes']);
@@ -156,7 +166,7 @@ class ArticleFilterForm extends FormBase {
 
     $page = $form_state->get('page') ?? 0;
     if ($form_state->get('pagination')) {
-      $form['#attached']['library'] = ['premium_articles/pager'];
+      $form['#attached']['library'] = array_merge($form['#attached']['library'] ?? [], ['premium_articles/pager']);
       $form['page'] = [
         '#type' => 'hidden',
         '#attributes' => ['class' => ['article-page-value']],
@@ -187,16 +197,9 @@ class ArticleFilterForm extends FormBase {
    * @return array
    */
   public function buildContents(FormStateInterface $form_state) {
-    $options = [
-      'fields' => $form_state->get('fields'),
-      'count' => $form_state->get('count'),
-      'view_mode' => $form_state->get('view_mode'),
-      'pagination' => $form_state->get('pagination'),
-      'sort' => $form_state->get('sort'),
-      'show_total' => $form_state->get('show_total')
-    ];
+    $options = $this->optionsFromFormState($form_state);
     $entity_bundle = $form_state->get('entity_bundle') ?? 'node.article';
-    $page = $form_state->get('page') ?? 0;
+    $page = $options['page'];
 
     if (!$this->request->isXmlHttpRequest() || $form_state->isRebuilding()) {
       $nodes = $this->getArticlesForBuilding($entity_bundle, $options, $page);
@@ -214,7 +217,7 @@ class ArticleFilterForm extends FormBase {
 
     if (!empty($options['show_total'])) {
       $content['total'] = [
-        '#markup' => $this->articleManager->getArticlesTotal($entity_bundle, $options, count($nodes))
+        '#markup' => $this->getArticlesTotal($entity_bundle, $options, count($nodes))
       ];
     }
 
@@ -229,6 +232,40 @@ class ArticleFilterForm extends FormBase {
   }
 
   /**
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return array
+   */
+  protected function optionsFromFormState(FormStateInterface $form_state) {
+    $options = [
+      'fields' => $form_state->get('fields'),
+      'count' => $form_state->getValue('count') ?? $form_state->get('count'),
+      'view_mode' => $form_state->get('view_mode'),
+      'pagination' => $form_state->get('pagination'),
+      'sort' => $form_state->getValue('sort') ?? $form_state->get('sort'),
+      'show_total' => $form_state->get('show_total'),
+      'page' => $form_state->getValue('page') ?? $form_state->get('page') ?? 0
+    ];
+    \Drupal::requestStack()->getCurrentRequest()->query->set('page', $options['page']);
+    foreach ($options['fields'] as $key => $value) {
+      if ($form_state->hasValue($key)) {
+        if (is_array($form_state->getValue($key))) {
+          $result = [];
+          foreach ($form_state->getValue($key) as $value2) {
+            if ($value2) {
+              $result[] = $value2;
+            }
+          }
+          $options['fields'][$key] = $result;
+        } else {
+          $options['fields'][$key] = $form_state->getValue($key);
+        }
+      }
+    }
+    return $options;
+  }
+
+  /**
    * Function for retrieving the articles to be displayed. Overwrite for when a custom query is necessary.
    *
    * @param string $entity_bundle
@@ -239,6 +276,19 @@ class ArticleFilterForm extends FormBase {
    */
   protected function getArticlesForBuilding($entity_bundle, array $options, $page = 0) {
     return $this->articleManager->getArticles($entity_bundle, $options, $page);
+  }
+
+  /**
+   * Function for getting total number of articles. Overwrite for when a custom query is necessary.
+   *
+   * @param string $entity_bundle
+   * @param array $options
+   * @param int $shown
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  protected function getArticlesTotal($entity_bundle, array $options, $shown) {
+    return $this->articleManager->getArticlesTotal($entity_bundle, $options, $shown);
   }
 
   /**
@@ -279,6 +329,12 @@ class ArticleFilterForm extends FormBase {
    * @return mixed
    */
   public function contentCallback($form, FormStateInterface $form_state) {
-    return $form['content'];
+    $options = $this->optionsFromFormState($form_state);
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand('.article-form-contents', $form['content']));
+    $url = Url::fromRoute('<current>');
+    $data = ($options['fields'] ?? []) + ['sort' => $options['sort'], 'page' => $options['page']];
+    $response->addCommand(new HistoryReplaceStateCommand(NULL, $this->t('Search'), $url->toString() . '?' . http_build_query($data)));
+    return $response;
   }
 }
