@@ -67,8 +67,6 @@ class ArticleFilterType extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $setting = $this->getSetting('allow_form_elements');
-
     $element['entity_bundle'] = [
       '#type' => 'select',
       '#title' => t('Article entity bundle'),
@@ -168,11 +166,10 @@ class ArticleFilterType extends FieldItemBase {
    * {@inheritdoc}
    */
   public function postSave($update) {
-    if (!$update) {
-      if (empty($this->values['fields']['field_article_type'][0])) {
-        $this->values['fields']['field_article_type'][0] = $this->getEntity()->id();
-        return TRUE;
-      }
+    if (!empty($this->values['element_id_field'])) {
+      $this->values['fields'][$this->values['element_id_field']] = [$this->getEntity()->id()];
+      unset($this->values['element_id_field']);
+      return TRUE;
     }
     return FALSE;
   }

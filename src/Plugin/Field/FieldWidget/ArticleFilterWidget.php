@@ -58,14 +58,14 @@ class ArticleFilterWidget extends WidgetBase {
       $vid = $item->getEntity()->bundle();
       foreach ($fields as $field_name => $form_element) {
         if ($form_element['vid'] == $vid) {
-          $element[$field_name . '_title'] = [
+          $element['fields'][$field_name] = [
             '#type' => 'item',
             '#title' => $form_element['label'],
             '#description' => $item->getEntity()->label() ?? $this->t('Show articles of this type.'),
           ];
-          $element['fields'][$field_name] = [
+          $element['element_id_field'] = [
             '#type' => 'hidden',
-            '#default_value' => $item->getEntity()->id()
+            '#default_value' => $field_name
           ];
           unset($fields[$field_name]);
         }
@@ -73,6 +73,7 @@ class ArticleFilterWidget extends WidgetBase {
     }
 
     foreach ($fields as $field_name => $form_element) {
+
       $element['fields'][$field_name] = [
         '#type' => $form_element['form_element'],
         '#title' => $form_element['label'],

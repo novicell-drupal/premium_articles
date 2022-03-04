@@ -48,6 +48,9 @@ msgstr "Artikel kategori"
 msgid "Article categories"
 msgstr "Artikel kategorier"
 
+msgid "Facets"
+msgstr "Facetter"
+
 msgid "Used to group together related articles."
 msgstr "Bruges til at gruppere relaterede artikler."
 
