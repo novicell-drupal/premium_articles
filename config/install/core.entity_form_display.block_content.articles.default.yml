@@ -5,7 +5,7 @@ dependencies:
     - block_content.type.articles
     - field.field.block_content.articles.field_articles
   module:
-    - premium_articles
+    - entity_overview
 id: block_content.articles.default
 targetEntityType: block_content
 bundle: articles

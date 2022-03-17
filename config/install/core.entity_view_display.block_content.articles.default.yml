@@ -6,7 +6,7 @@ dependencies:
     - block_content.type.articles
     - field.field.block_content.articles.field_articles
   module:
-    - premium_articles
+    - entity_overview
 _core:
   default_config_hash: ffqVFCxK1lsEN7GYnAR-Bph55DQKvtSs7yBS1mOiv5k
 id: block_content.articles.default

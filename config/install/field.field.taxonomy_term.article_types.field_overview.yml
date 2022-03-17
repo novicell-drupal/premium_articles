@@ -5,7 +5,7 @@ dependencies:
     - field.storage.taxonomy_term.field_overview
     - taxonomy.vocabulary.article_types
   module:
-    - premium_articles
+    - entity_overview
 id: taxonomy_term.article_types.field_overview
 field_name: field_overview
 entity_type: taxonomy_term
@@ -27,4 +27,4 @@ default_value:
       - sort
 default_value_callback: ''
 settings: {  }
-field_type: article_filter
+field_type: overview_filter

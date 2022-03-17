@@ -6,7 +6,7 @@ dependencies:
     - block_content.type.article_form
     - field.field.block_content.article_form.field_articles_form
   module:
-    - premium_articles
+    - entity_overview
 _core:
   default_config_hash: Onuvlyux69COEXIKRRvYb0MONAPnE3ZJ2jTbMkoytqk
 id: block_content.article_form.default

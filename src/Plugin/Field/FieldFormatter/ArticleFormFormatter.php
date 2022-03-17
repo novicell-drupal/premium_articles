@@ -3,6 +3,7 @@ namespace Drupal\premium_articles\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\entity_overview\Plugin\Field\FieldFormatter\OverviewFormFormatter;
 
 /**
  * Plugin implementation of the 'article_filter_form' formatter.
@@ -11,11 +12,12 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "article_filter_form",
  *   label = @Translation("Article filter form"),
  *   field_types = {
- *     "article_filter"
+ *     "article_filter",
+ *     "overview_filter"
  *   }
  * )
  */
-class ArticleFormFormatter extends ArticleListFormatter {
+class ArticleFormFormatter extends OverviewFormFormatter {
 
   /**
    * {@inheritdoc}
@@ -33,46 +35,4 @@ class ArticleFormFormatter extends ArticleListFormatter {
 
     return $elements;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings() {
-    return [
-        'show_total' => '',
-      ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    return [
-        'show_total' => [
-          '#type' => 'select',
-          '#title' => t('Display of total number of elements'),
-          '#options' => $this->articleManager->getShowTotalOptions(),
-          '#default_value' => $this->getSetting('show_total'),
-          '#required' => FALSE,
-        ],
-
-        // Implement settings form.
-      ] + parent::settingsForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-    if (!empty($this->getSetting('show_total'))) {
-      $options = $this->articleManager->getShowTotalOptions();
-      $summary[] = $this->t('Total display: @show_total', [
-        '@show_total' => $options[$this->getSetting('show_total')]
-      ]);
-    }
-
-    return $summary;
-  }
-
 }

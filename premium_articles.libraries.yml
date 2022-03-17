@@ -1,7 +1,0 @@
-pager:
-  version: VERSION
-  js:
-    js/article_pager.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupal.ajax

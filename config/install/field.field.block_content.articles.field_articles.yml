@@ -6,7 +6,7 @@ dependencies:
     - block_content.type.articles
     - field.storage.block_content.field_articles
   module:
-    - premium_articles
+    - entity_overview
 id: block_content.articles.field_articles
 field_name: field_articles
 entity_type: block_content
@@ -26,4 +26,4 @@ default_value:
     facets: {  }
 default_value_callback: ''
 settings: {  }
-field_type: article_filter
+field_type: overview_filter

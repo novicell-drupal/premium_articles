@@ -1,29 +1,16 @@
 <?php
 namespace Drupal\premium_articles\Plugin\Field\FieldType;
 
-use Drupal;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\OptGroup;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataDefinitionInterface;
-use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
-use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\options\Plugin\Field\FieldType\ListItemBase;
-use Drupal\options\Plugin\Field\FieldType\ListStringItem;
-use Drupal\premium_articles\ArticleManager;
-use Drupal\styles\StylesManager;
-use Drupal\user\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the Article Filter field type.
@@ -33,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   module = "premium_articles",
  *   label = @Translation("Article filter"),
  *   description = @Translation("Field with filter and display options for articles."),
- *   category = @Translation("Articles"),
+ *   category = @Translation("Overviews"),
  *   default_widget = "article_filter_widget",
  *   default_formatter = "article_list"
  * )
@@ -41,16 +28,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ArticleFilterType extends FieldItemBase {
 
   /**
-   * @var \Drupal\premium_articles\ArticleManager
+   * @var \Drupal\entity_overview\OverviewManager
    */
-  protected $articleManager;
+  protected $overviewManager;
 
   /**
    * {@inheritdoc}
    */
   public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
-    $this->articleManager = \Drupal::service('premium_articles.manager');
+    $this->overviewManager = \Drupal::service('entity_overview.manager');
   }
 
   /**
@@ -70,7 +57,7 @@ class ArticleFilterType extends FieldItemBase {
     $element['entity_bundle'] = [
       '#type' => 'select',
       '#title' => t('Article entity bundle'),
-      '#options' => $this->articleManager->getEntityBundles(),
+      '#options' => $this->overviewManager->getEntityBundles(),
       '#default_value' => $this->getSetting('entity_bundle'),
     ];
 

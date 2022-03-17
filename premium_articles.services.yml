@@ -1,8 +1,0 @@
-services:
-  premium_articles.manager:
-    class: Drupal\premium_articles\ArticleManager
-    arguments:
-      - '@entity_type.manager'
-      - '@config.factory'
-      - '@entity_field.manager'
-      - '@entity_type.bundle.info'

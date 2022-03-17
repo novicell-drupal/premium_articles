@@ -5,7 +5,7 @@ dependencies:
     - block_content.type.article_form
     - field.storage.block_content.field_articles_form
   module:
-    - premium_articles
+    - entity_overview
 id: block_content.article_form.field_articles_form
 field_name: field_articles_form
 entity_type: block_content
@@ -27,4 +27,4 @@ default_value:
       - sort
 default_value_callback: ''
 settings: {  }
-field_type: article_filter
+field_type: overview_filter

@@ -1,5 +1,0 @@
-premium_articles.list:
-  title: 'Premium Articles'
-  parent: system.admin_config_content
-  description: 'Configure premium articles.'
-  route_name: premium_articles.list
