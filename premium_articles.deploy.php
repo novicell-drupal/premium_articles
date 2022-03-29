@@ -3,7 +3,7 @@
 use Drupal\Core\Config\Config;
 
 /**
- * Migrate from DDS dynamic key value to dynamic key value if exists
+ * Migrate overviews to Entity Overview
  */
 function premium_articles_deploy_migrate_entity_overview() {
   /** @var \Drupal\Core\Extension\ModuleHandler $module_handler */

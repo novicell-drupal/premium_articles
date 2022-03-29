@@ -29,7 +29,7 @@ class ArticleFormFormatter extends OverviewFormFormatter {
       $options = $item->getValue();
       $options['entity_bundle'] = $items->getSetting('entity_bundle');
       $options['view_mode'] = $this->getSetting('view_mode');
-      $options['show_total'] = $this->getSetting('show_total');
+      
       $elements[$delta] = \Drupal::formBuilder()->getForm('Drupal\premium_articles\Form\ArticleFilterForm', $options);
     }
 
