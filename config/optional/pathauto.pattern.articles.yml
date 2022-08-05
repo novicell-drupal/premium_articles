@@ -8,14 +8,14 @@ label: Articles
 type: 'canonical_entities:node'
 pattern: '[node:field_article_type:entity:name]/[node:title]'
 selection_criteria:
-  de797767-2e16-4081-a76a-133e8637ec08:
-    id: node_type
-    bundles:
-      article: article
+  973f8c5b-dd12-49c1-bda4-4ed8523fd1f7:
+    id: 'entity_bundle:node'
     negate: false
+    uuid: 973f8c5b-dd12-49c1-bda4-4ed8523fd1f7
     context_mapping:
       node: node
-    uuid: de797767-2e16-4081-a76a-133e8637ec08
+    bundles:
+      article: article
 selection_logic: and
 weight: -5
 relationships: {  }
