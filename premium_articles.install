@@ -74,3 +74,122 @@ function premium_articles_update_9001(&$sandbox) {
   }
   $installer->install(['entity_overview']);
 }
+
+/**
+ * Prepare Entity Overview migration
+ */
+function premium_articles_update_9002(&$sandbox) {
+  $config_factory = \Drupal::configFactory();
+  $list = $config_factory->listAll('core.entity_view_display.');
+  foreach ($list as $config_id) {
+    $config = $config_factory->getEditable($config_id);
+    $dependencies = $config->get('dependencies');
+    if (isset($dependencies['module']) && in_array('premium_articles', $dependencies['module'])) {
+      foreach ($dependencies['module'] as $key => $module) {
+        if ($module == 'premium_articles') {
+          $dependencies['module'][$key] = 'entity_overview';
+        }
+      }
+      $config->set('dependencies', $dependencies);
+      $config->save();
+    }
+    $content = $config->get('content') ?? [];
+    $change = FALSE;
+    foreach ($content as $field_name => $display) {
+      $type = $display['type'] ?? '';
+      if ($type == 'article_filter_form') {
+        $content[$field_name]['type'] = 'overview_filter_form';
+        $change = TRUE;
+      } elseif ($type == 'article_list') {
+        $content[$field_name]['type'] = 'overview_list';
+        $change = TRUE;
+      }
+    }
+    if ($change) {
+      $config->set('content', $content);
+      $config->save();
+    }
+  }
+
+  $list = $config_factory->listAll('core.entity_form_display.');
+  foreach ($list as $config_id) {
+    $config = $config_factory->getEditable($config_id);
+    $dependencies = $config->get('dependencies');
+    if (isset($dependencies['module']) && in_array('premium_articles', $dependencies['module'])) {
+      foreach ($dependencies['module'] as $key => $module) {
+        if ($module == 'premium_articles') {
+          $dependencies['module'][$key] = 'entity_overview';
+        }
+      }
+      $config->set('dependencies', $dependencies);
+      $config->save();
+    }
+    $content = $config->get('content') ?? [];
+    $change = FALSE;
+    foreach ($content as $field_name => $display) {
+      $type = $display['type'] ?? '';
+      if ($type == 'article_filter_widget') {
+        $content[$field_name]['type'] = 'overview_filter_widget';
+        $change = TRUE;
+      }
+    }
+    if ($change) {
+      $config->set('content', $content);
+      $config->save();
+    }
+  }
+
+  $list = $config_factory->listAll('field.storage.');
+  foreach ($list as $config_id) {
+    $change = FALSE;
+    $config = $config_factory->getEditable($config_id);
+    $dependencies = $config->get('dependencies');
+    if (isset($dependencies['module']) && in_array('premium_articles', $dependencies['module'])) {
+      foreach ($dependencies['module'] as $key => $module) {
+        if ($module == 'premium_articles') {
+          $dependencies['module'][$key] = 'entity_overview';
+        }
+      }
+      $config->set('dependencies', $dependencies);
+      $config->set('module', 'entity_overview');
+      $change = TRUE;
+    }
+    if ($config->get('type') == 'article_filter') {
+      $config->set('type', 'overview_filter');
+      $change = TRUE;
+    }
+    $settings = $config->get('settings');
+    if (!empty($settings) && !empty($settings['entity_bundle'] ?? [])) {
+      $settings['overview'] = str_replace('.', '_', $settings['entity_bundle']);
+      unset($settings['entity_bundle']);
+      $config->set('settings', $settings);
+      $change = TRUE;
+    }
+    if ($change) {
+      $config->save();
+    }
+  }
+
+  $list = $config_factory->listAll('field.field.');
+  foreach ($list as $config_id) {
+    $change = FALSE;
+    $config = $config_factory->getEditable($config_id);
+    $dependencies = $config->get('dependencies');
+    if (isset($dependencies['module']) && in_array('premium_articles', $dependencies['module'])) {
+      foreach ($dependencies['module'] as $key => $module) {
+        if ($module == 'premium_articles') {
+          $dependencies['module'][$key] = 'entity_overview';
+        }
+      }
+      $config->set('dependencies', $dependencies);
+      $change = TRUE;
+    }
+    if ($config->get('field_type') == 'article_filter') {
+      $config->set('field_type', 'overview_filter');
+      $change = TRUE;
+    }
+    if ($change) {
+      $config->save();
+    }
+  }
+}

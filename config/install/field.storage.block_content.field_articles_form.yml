@@ -9,7 +9,7 @@ field_name: field_articles_form
 entity_type: block_content
 type: overview_filter
 settings:
-  entity_bundle: node.article
+  overview: article
   allow_facets: 1
 module: entity_overview
 locked: false

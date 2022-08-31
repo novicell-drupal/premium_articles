@@ -25,7 +25,7 @@ content:
     settings:
       view_mode: teaser
     third_party_settings: {  }
-    type: article_filter_form
+    type: overview_filter_form
     region: content
 hidden:
   langcode: true

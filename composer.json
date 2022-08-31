@@ -11,6 +11,6 @@
     "require": {
         "drupal/field_group": "^3.0",
         "drupal/paragraphs_asymmetric_translation_widgets": "^1.0@beta",
-        "novicell/entity_overview": "^1.0"
+        "novicell/entity_overview": "^2.0"
     }
 }

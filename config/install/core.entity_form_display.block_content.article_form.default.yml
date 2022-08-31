@@ -12,7 +12,7 @@ bundle: article_form
 mode: default
 content:
   field_articles_form:
-    type: article_filter_widget
+    type: overview_filter_widget
     weight: 0
     region: content
     settings: {  }

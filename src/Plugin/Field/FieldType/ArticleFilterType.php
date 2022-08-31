@@ -57,7 +57,7 @@ class ArticleFilterType extends FieldItemBase {
     $element['entity_bundle'] = [
       '#type' => 'select',
       '#title' => t('Article entity bundle'),
-      '#options' => $this->overviewManager->getEntityBundles(),
+      '#options' => $this->overviewManager->getOverviewConfigs(),
       '#default_value' => $this->getSetting('entity_bundle'),
     ];
 

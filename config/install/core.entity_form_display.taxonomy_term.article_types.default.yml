@@ -25,7 +25,7 @@ content:
     weight: 2
     settings: {  }
     third_party_settings: {  }
-    type: article_filter_widget
+    type: overview_filter_widget
     region: content
   langcode:
     type: language_select
