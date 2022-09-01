@@ -11,4 +11,4 @@ fields:
   field_article_type: checkboxes
 engine_id: entity_query
 sort_field: field_list_date
-show_total: '''
+show_total: ''
