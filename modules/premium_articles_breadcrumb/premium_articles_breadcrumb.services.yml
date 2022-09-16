@@ -1,0 +1,6 @@
+services:
+  premium_articles_breadcrumb.breadcrumb:
+    class: Drupal\premium_articles_breadcrumb\Breadcrumb\BreadcrumbBuilder
+    arguments: ['@router.admin_context', '@logger.factory']
+    tags:
+    - { name: breadcrumb_builder, priority: 1004 }

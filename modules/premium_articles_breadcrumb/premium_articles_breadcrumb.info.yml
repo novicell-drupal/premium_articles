@@ -1,0 +1,8 @@
+name: 'Premium Articles Breadcrumb'
+type: module
+description: 'Creates breadcrumbs based on article type'
+core_version_requirement: ^8.8 || ^9
+package: 'Drupal Premium'
+version: '2.0'
+dependencies:
+  - premium_articles:premium_articles
