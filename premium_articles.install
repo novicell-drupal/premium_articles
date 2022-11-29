@@ -38,7 +38,7 @@ function premium_articles_uninstall($is_syncing) {
 
   $storage_handler = \Drupal::entityTypeManager()->getStorage('node');
   $entities = $storage_handler->loadMultiple($nids);
-  $storage_handler->delete($entities);
+  $storage_handler->delete($entities ?? []);
 
   $nodeType = \Drupal::entityTypeManager()->getStorage('node_type')->load('article');
   $nodeType->delete();
@@ -50,7 +50,7 @@ function premium_articles_uninstall($is_syncing) {
 
   $storage_handler = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $entities = $storage_handler->loadMultiple($tids);
-  $storage_handler->delete($entities);
+  $storage_handler->delete($entities ?? []);
 
   // query all entities you want for example taxonomy term from tags vocabulary
   $query = \Drupal::entityQuery('taxonomy_term');
@@ -59,7 +59,7 @@ function premium_articles_uninstall($is_syncing) {
 
   $storage_handler = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   $entities = $storage_handler->loadMultiple($tids);
-  $storage_handler->delete($entities);
+  $storage_handler->delete($entities ?? []);
 }
 
 /**

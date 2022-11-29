@@ -1,6 +1,11 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - field.field.node.article.field_article_categories
+    - field.field.node.article.field_article_type
+    - field.field.node.article.field_list_date
+    - node.type.article
 id: article
 label: Article
 entity_bundles:
