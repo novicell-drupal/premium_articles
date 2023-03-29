@@ -1,7 +1,7 @@
 name: Premium Articles
 description: Article functionality of the Drupal Premium distribution.
 type: module
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 version: '2.0'
 package: Drupal Premium
 

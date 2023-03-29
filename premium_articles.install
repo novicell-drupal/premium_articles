@@ -32,7 +32,8 @@ function premium_articles_install() {
  */
 function premium_articles_uninstall($is_syncing) {
   // Delete all articles
-  $query = \Drupal::entityQuery('node');
+  $query = \Drupal::entityQuery('node')
+    ->accessCheck(FALSE);
   $query->condition('type', 'article');
   $nids = $query->execute();
 
@@ -44,7 +45,8 @@ function premium_articles_uninstall($is_syncing) {
   $nodeType->delete();
 
   // Delete all article types
-  $query = \Drupal::entityQuery('taxonomy_term');
+  $query = \Drupal::entityQuery('taxonomy_term')
+    ->accessCheck(FALSE);
   $query->condition('vid', 'article_types');
   $tids = $query->execute();
 
@@ -53,7 +55,8 @@ function premium_articles_uninstall($is_syncing) {
   $storage_handler->delete($entities ?? []);
 
   // query all entities you want for example taxonomy term from tags vocabulary
-  $query = \Drupal::entityQuery('taxonomy_term');
+  $query = \Drupal::entityQuery('taxonomy_term')
+    ->accessCheck(FALSE);
   $query->condition('vid', 'article_categories');
   $tids = $query->execute();
 
