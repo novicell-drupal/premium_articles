@@ -3,6 +3,6 @@ type: module
 description: 'Creates breadcrumbs based on article type'
 core_version_requirement: ^9 || ^10
 package: 'Drupal Premium'
-version: '2.1'
+version: '3.0'
 dependencies:
   - premium_articles:premium_articles
