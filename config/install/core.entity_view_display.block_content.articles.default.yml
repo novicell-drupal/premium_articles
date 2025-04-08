@@ -20,7 +20,7 @@ content:
     settings:
       view_mode: teaser
     third_party_settings: {  }
-    type: article_list
+    type: overview_list
     region: content
 hidden:
   langcode: true
