@@ -20,7 +20,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *   module = "premium_articles",
  *   label = @Translation("Article filter"),
  *   description = @Translation("Field with filter and display options for articles."),
- *   category = @Translation("Overviews"),
+ *   category = "entity_overviews",
  *   default_widget = "article_filter_widget",
  *   default_formatter = "article_list"
  * )
