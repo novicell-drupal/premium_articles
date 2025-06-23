@@ -1,0 +1,7 @@
+premium_articles_layout.settings:
+  path: '/admin/config/content/premium_articles_layout/settings'
+  defaults:
+    _form: '\Drupal\premium_articles_layout\Form\ArticleSettingsForm'
+    _title: 'Article layout settings'
+  requirements:
+    _permission: 'configure premium articles layout'

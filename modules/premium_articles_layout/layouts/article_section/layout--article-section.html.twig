@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a one-column layout.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout <div>.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set classes = [
+  'layout',
+  'layout--article_section',
+  'section'
+] %}
+
+<section {{ attributes.addClass(classes) }}>
+  <div class="container">
+    {% if header and header is not empty %}
+      <div class="row">
+        <div class="layout-builder__section--header">
+          {{ header }}
+        </div>
+      </div>
+    {% endif %}
+    {% if content.list_date or content.article_type or content.article_categories %}
+      <div class="row">
+        <div class="col-xs-12">
+          <hr/>
+          {% if content.list_date %}
+            {{ content.list_date }} •
+          {% endif %}
+          {% if content.article_type %}
+            {{ content.article_type }} •
+          {% endif %}
+          {% if content.article_categories %}
+            {{ content.article_categories }}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    <div class="row">
+      <div {{ region_attributes.content.addClass(['col-xs-12 col-md-8', 'layout__region', 'layout__region--first']).addClass(content.sidebar ? ['pb-xs', 'pb-0-md']) }}>
+        {{ content.content }}
+      </div>
+      <div {{ region_attributes.sidebar.addClass(['col-xs-12 col-md-4', 'layout__region', 'layout__region--second']) }}>
+        {{ content.sidebar }}
+      </div>
+    </div>
+  </div>
+</section>

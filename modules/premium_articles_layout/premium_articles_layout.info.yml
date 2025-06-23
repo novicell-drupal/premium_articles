@@ -1,6 +1,6 @@
-name: 'Premium Articles Breadcrumb'
+name: 'Premium Articles Layout'
 type: module
-description: 'Creates breadcrumbs based on article type'
+description: 'Offers a layout for articles'
 core_version_requirement: ^9 || ^10 || ^11
 package: 'Drupal Premium'
 version: '3.2'
