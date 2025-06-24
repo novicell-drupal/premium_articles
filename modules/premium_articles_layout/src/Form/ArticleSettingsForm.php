@@ -23,7 +23,7 @@ class ArticleSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, protected $typedConfigManager, DateFormatterInterface $dateFormatter) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected TypedConfigManagerInterface $typedConfigManager, DateFormatterInterface $dateFormatter) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->dateFormatter = $dateFormatter;
   }
