@@ -122,9 +122,9 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
           '#markup' => $entity->label(),
         ];
       }
-      if ($entity->hasField('field_subtitle') && $this->config->get('show_subtitle') ?? TRUE) {
-        $build['subtitle'] = [
-          '#markup' => $entity->get('field_subtitle')->getString(),
+      if ($entity->hasField('field_description') && $this->config->get('show_description') ?? TRUE) {
+        $build['description'] = [
+          '#markup' => $entity->get('field_description')->getString(),
         ];
       }
       if ($entity->hasField('field_list_date') && $this->config->get('show_list_date') ?? TRUE) {

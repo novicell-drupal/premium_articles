@@ -26,14 +26,14 @@
         </div>
       </div>
     {% endif %}
-    {% if content.list_date or content.article_type or content.article_categories %}
+    {% if content.title or content.description or content.list_date or content.article_type or content.article_categories %}
       <div class="row">
         <div class="col-xs-12">
           {% if content.title %}
             <h1>{{ content.title }}</h1>
           {% endif %}
-          {% if content.subtitle %}
-            <h2>{{ content.subtitle }}</h2>
+          {% if content.description %}
+            <h2>{{ content.description }}</h2>
           {% endif %}
           <hr/>
           {% if content.list_date %}

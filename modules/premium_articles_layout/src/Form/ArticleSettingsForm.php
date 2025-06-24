@@ -62,20 +62,20 @@ class ArticleSettingsForm extends ConfigFormBase {
     $config = $this->config('premium_articles_layout.settings');
     $form = [];
 
-    $form['show_article_title'] = [
+    $form['show_title'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show article title'),
+      '#title' => $this->t('Show title'),
       '#description' => $this->t('Check this box to display the article title.'),
-      '#config_target' => 'premium_articles_layout.settings:show_article_title',
-      '#default_value' => $config->get('show_article_title') ?? TRUE,
+      '#config_target' => 'premium_articles_layout.settings:show_title',
+      '#default_value' => $config->get('show_title') ?? TRUE,
     ];
 
-    $form['show_article_subtitle'] = [
+    $form['show_description'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Show article subtitle'),
-      '#description' => $this->t('Check this box to display the article subtitle. Requires a field_subtitle.'),
-      '#config_target' => 'premium_articles_layout.settings:show_article_subtitle',
-      '#default_value' => $config->get('show_article_subtitle') ?? TRUE,
+      '#title' => $this->t('Show description'),
+      '#description' => $this->t('Check this box to display the article description.'),
+      '#config_target' => 'premium_articles_layout.settings:show_description',
+      '#default_value' => $config->get('show_description') ?? TRUE,
     ];
 
     $form['show_article_type'] = [
