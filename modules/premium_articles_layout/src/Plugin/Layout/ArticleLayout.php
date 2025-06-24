@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\Router;
+use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\premium_core\Plugin\Layout\BaseLayout;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -115,7 +116,7 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
       $this->getPluginDefinition()->getTemplate()
     ];
 
-    $entity = $this->getNode();
+    $entity = $this->getEntity();
     if ($entity instanceof ContentEntityInterface) {
       if ($this->config->get('show_title') ?? TRUE) {
         $build['title'] = [
@@ -190,7 +191,7 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
     return parent::getCacheTags() + $this->config->getCacheTags();
   }
 
-  protected function getNode(): ?ContentEntityInterface {
+  protected function getEntity(): ?ContentEntityInterface {
     // fetch the available contexts
     $available_contexts = $this->contextRepository->getAvailableContexts();
 
@@ -201,6 +202,19 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
     $matches = $this->contextHandler()
       ->getMatchingContexts($available_runtime_contexts, $plugin_context_definition);
     $matching_context = reset($matches);
+    if (is_null($matching_context->getContextValue())) {
+      /** @var SectionStorageInterface $section_storage */
+      $section_storage = \Drupal::routeMatch()->getParameter('section_storage');
+      if (is_null($section_storage)) {
+        return NULL;
+      }
+      try {
+        return $section_storage->getContextValue('entity');
+      } catch (ContextException $e) {
+        return NULL;
+      }
+    }
     return $matching_context->getContextValue();
   }
+
 }
