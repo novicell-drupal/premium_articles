@@ -34,16 +34,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   default_region = "content",
  *   icon_map = {
  *     {
- *       "content",
- *       "sidebar"
+ *       "content"
  *     }
  *   },
  *   regions = {
  *     "content" = {
  *       "label" = @Translation("Main content"),
- *     },
- *     "sidebar" = {
- *       "label" = @Translation("Sidebar"),
  *     }
  *   }
  * )
@@ -121,6 +117,16 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
 
     $entity = $this->getNode();
     if ($entity instanceof ContentEntityInterface) {
+      if ($this->config->get('show_title') ?? TRUE) {
+        $build['title'] = [
+          '#markup' => $entity->label(),
+        ];
+      }
+      if ($entity->hasField('field_subtitle') && $this->config->get('show_subtitle') ?? TRUE) {
+        $build['subtitle'] = [
+          '#markup' => $entity->get('field_subtitle')->getString(),
+        ];
+      }
       if ($entity->hasField('field_list_date') && $this->config->get('show_list_date') ?? TRUE) {
         $time = new DrupalDateTime();
         $build['list_date'] = [
@@ -133,7 +139,6 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
         /** @var Term $term */
         foreach ($field->referencedEntities() as $term) {
           $render = $term->toLink()->toRenderable();
-          $render['#attributes']['class'][] = 'button';
           $build['article_type'] = $render;
         }
       }
@@ -144,7 +149,6 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
         /** @var Term $term */
         foreach ($field->referencedEntities() as $term) {
           $render = $term->toLink()->toRenderable();
-          $render['#attributes']['class'][] = 'button';
           $build['article_categories'][] = $render;
         }
       }

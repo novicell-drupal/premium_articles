@@ -23,7 +23,7 @@ class ArticleSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, protected TypedConfigManagerInterface $typedConfigManager, DateFormatterInterface $dateFormatter) {
+  public function __construct(ConfigFactoryInterface $config_factory, protected $typedConfigManager, DateFormatterInterface $dateFormatter) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->dateFormatter = $dateFormatter;
   }
@@ -62,9 +62,26 @@ class ArticleSettingsForm extends ConfigFormBase {
     $config = $this->config('premium_articles_layout.settings');
     $form = [];
 
+    $form['show_article_title'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show article title'),
+      '#description' => $this->t('Check this box to display the article title.'),
+      '#config_target' => 'premium_articles_layout.settings:show_article_title',
+      '#default_value' => $config->get('show_article_title') ?? TRUE,
+    ];
+
+    $form['show_article_subtitle'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show article subtitle'),
+      '#description' => $this->t('Check this box to display the article subtitle. Requires a field_subtitle.'),
+      '#config_target' => 'premium_articles_layout.settings:show_article_subtitle',
+      '#default_value' => $config->get('show_article_subtitle') ?? TRUE,
+    ];
+
     $form['show_article_type'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show article type'),
+      '#description' => $this->t('Check this box to display the article type.'),
       '#config_target' => 'premium_articles_layout.settings:show_article_type',
       '#default_value' => $config->get('show_article_type') ?? TRUE,
     ];
@@ -72,6 +89,7 @@ class ArticleSettingsForm extends ConfigFormBase {
     $form['show_article_categories'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show article categories'),
+      '#description' => $this->t('Check this box to display the article categories.'),
       '#config_target' => 'premium_articles_layout.settings:show_article_categories',
       '#default_value' => $config->get('show_article_categories') ?? TRUE,
     ];
@@ -79,6 +97,7 @@ class ArticleSettingsForm extends ConfigFormBase {
     $form['show_list_date'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show list date'),
+      '#description' => $this->t('Check this box to display the list date.'),
       '#config_target' => 'premium_articles_layout.settings:show_list_date',
       '#default_value' => $config->get('show_list_date') ?? TRUE,
     ];
