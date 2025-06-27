@@ -5,6 +5,15 @@
  *
  * Available variables:
  * - content: The content for this layout.
+ *   All of the following might be available if enabled in the article settings.
+ *   - content.content: The main content and content of the content region.
+ *   - content.sidebar: The content of the sidebar region.
+ *   - content.title: The title of the article.
+ *   - content.description: The description of the article.
+ *   - content.list_date: The listed date for this articles.
+ *   - content.article_type: Link to the taxonomy term that is the type of this article.
+ *   - content.article_categories: Links to all the taxonomy terms that are the categories of this article.
+ *   - content.user_profile: A rendered user profile of the author of this article.
  * - attributes: HTML attributes for the layout <div>.
  *
  * @ingroup themeable
@@ -53,6 +62,9 @@
         {{ content.content }}
       </div>
       <div {{ region_attributes.sidebar.addClass(['col-xs-12 col-md-4', 'layout__region', 'layout__region--second']) }}>
+        {% if content.user_profile %}
+          {{ content.user_profile }}
+        {% endif %}
         {{ content.sidebar }}
       </div>
     </div>

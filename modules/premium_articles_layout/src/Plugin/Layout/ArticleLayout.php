@@ -10,6 +10,8 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -21,6 +23,8 @@ use Drupal\Core\Routing\Router;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\premium_core\Plugin\Layout\BaseLayout;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -129,7 +133,7 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
         ];
       }
       if ($entity->hasField('field_list_date') && $this->config->get('show_list_date') ?? TRUE) {
-        $time = new DrupalDateTime();
+        $time = new DrupalDateTime($entity->get('field_list_date')->getString());
         $build['list_date'] = [
           '#markup' => $this->dateFormatter->format($time->getTimestamp(), $this->config->get('list_date_format') ?? 'long'),
         ];
@@ -151,6 +155,13 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
         foreach ($field->referencedEntities() as $term) {
           $render = $term->toLink()->toRenderable();
           $build['article_categories'][] = $render;
+        }
+      }
+      if ($entity instanceof EntityOwnerInterface && $this->config->get('show_user_profile') ?? TRUE) {
+        $user = $entity->getOwner();
+        if ($user instanceof User) {
+          $viewBuilder = \Drupal::entityTypeManager()->getViewBuilder('user');
+          $build['user_profile'] = $viewBuilder->view($user, $this->config->get('user_view_mode'));
         }
       }
     }

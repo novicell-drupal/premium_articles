@@ -119,6 +119,27 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('list_date_format') ?: 'long',
     ];
 
+    $form['show_user_profile'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show author profile'),
+      '#description' => $this->t('Check this box to display the author profile.'),
+      '#config_target' => 'premium_articles_layout.settings:show_user_profile',
+      '#default_value' => $config->get('show_user_profile') ?? TRUE,
+    ];
+
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $repository */
+    $repository = \Drupal::service('entity_display.repository');
+    $view_modes = $repository->getViewModeOptions('user');
+
+    $form['user_view_mode'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Author view mode'),
+      '#description' => $this->t("Choose a view mode for displaying the author."),
+      '#options' => $view_modes,
+      '#config_target' => 'premium_articles_layout.settings:user_view_mode',
+      '#default_value' => $config->get('user_view_mode') ?: 'default',
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
