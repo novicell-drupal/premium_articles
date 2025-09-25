@@ -103,7 +103,7 @@ class ArticleLayout extends BaseLayout implements ContainerFactoryPluginInterfac
     $contextRepository = $container->get('context.repository');
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $configFactory */
     $configFactory = $container->get('config.factory');
-    $config = $configFactory->get('premium_articles_layout.settings');
+    $config = $configFactory->get('premium_articles.settings');
     return new static($configuration, $plugin_id, $plugin_definition, $logger, $dateFormatter, $contextRepository, $config);
   }
 

@@ -44,7 +44,7 @@ class ArticleSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames()
   {
-    return ['premium_articles_layout.settings'];
+    return ['premium_articles.settings'];
   }
 
   /**
@@ -52,21 +52,21 @@ class ArticleSettingsForm extends ConfigFormBase {
    */
   public function getFormId()
   {
-    return 'premium_articles_layout_settings';
+    return 'premium_articles_settings';
   }
 
   /**
    * @inheritDoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('premium_articles_layout.settings');
+    $config = $this->config('premium_articles.settings');
     $form = [];
 
     $form['show_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show title'),
       '#description' => $this->t('Check this box to display the article title.'),
-      '#config_target' => 'premium_articles_layout.settings:show_title',
+      '#config_target' => 'premium_articles.settings:show_title',
       '#default_value' => $config->get('show_title') ?? TRUE,
     ];
 
@@ -74,7 +74,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show description'),
       '#description' => $this->t('Check this box to display the article description.'),
-      '#config_target' => 'premium_articles_layout.settings:show_description',
+      '#config_target' => 'premium_articles.settings:show_description',
       '#default_value' => $config->get('show_description') ?? TRUE,
     ];
 
@@ -82,7 +82,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show article type'),
       '#description' => $this->t('Check this box to display the article type.'),
-      '#config_target' => 'premium_articles_layout.settings:show_article_type',
+      '#config_target' => 'premium_articles.settings:show_article_type',
       '#default_value' => $config->get('show_article_type') ?? TRUE,
     ];
 
@@ -90,7 +90,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show article categories'),
       '#description' => $this->t('Check this box to display the article categories.'),
-      '#config_target' => 'premium_articles_layout.settings:show_article_categories',
+      '#config_target' => 'premium_articles.settings:show_article_categories',
       '#default_value' => $config->get('show_article_categories') ?? TRUE,
     ];
 
@@ -98,7 +98,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show list date'),
       '#description' => $this->t('Check this box to display the list date.'),
-      '#config_target' => 'premium_articles_layout.settings:show_list_date',
+      '#config_target' => 'premium_articles.settings:show_list_date',
       '#default_value' => $config->get('show_list_date') ?? TRUE,
     ];
 
@@ -115,7 +115,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Date format'),
       '#description' => $this->t("Choose a format for displaying the date. Be sure to set a format appropriate for the field, i.e. omitting time for a field that only has a date."),
       '#options' => $options,
-      '#config_target' => 'premium_articles_layout.settings:list_date_format',
+      '#config_target' => 'premium_articles.settings:list_date_format',
       '#default_value' => $config->get('list_date_format') ?: 'long',
     ];
 
@@ -123,7 +123,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Show author profile'),
       '#description' => $this->t('Check this box to display the author profile.'),
-      '#config_target' => 'premium_articles_layout.settings:show_user_profile',
+      '#config_target' => 'premium_articles.settings:show_user_profile',
       '#default_value' => $config->get('show_user_profile') ?? TRUE,
     ];
 
@@ -136,7 +136,7 @@ class ArticleSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Author view mode'),
       '#description' => $this->t("Choose a view mode for displaying the author."),
       '#options' => $view_modes,
-      '#config_target' => 'premium_articles_layout.settings:user_view_mode',
+      '#config_target' => 'premium_articles.settings:user_view_mode',
       '#default_value' => $config->get('user_view_mode') ?: 'default',
     ];
 
