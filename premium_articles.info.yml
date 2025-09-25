@@ -1,8 +1,8 @@
 name: Premium Articles
 description: Article functionality of the Drupal Premium distribution.
 type: module
-core_version_requirement: ^9 || ^10 || ^11
-version: '3.2'
+core_version_requirement: ^11
+version: '4.0'
 package: Drupal Premium
 
 dependencies:
@@ -13,6 +13,7 @@ dependencies:
   - field_group:field_group
   - paragraphs_asymmetric_translation_widgets:paragraphs_asymmetric_translation_widgets
   - entity_overview:entity_overview
+  - layout_builder_restrictions:layout_builder_restrictions
 
 interface translation project: premium_articles
 interface translation server pattern: modules/contrib/premium_articles/translations/%language.po

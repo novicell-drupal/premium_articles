@@ -1,8 +1,0 @@
-name: 'Premium Articles Layout'
-type: module
-description: 'Offers a layout for articles'
-core_version_requirement: ^11
-package: 'Drupal Premium'
-version: '3.2'
-dependencies:
-  - premium_articles:premium_articles

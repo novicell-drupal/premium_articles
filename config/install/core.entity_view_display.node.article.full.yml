@@ -1,3 +1,4 @@
+langcode: en
 status: true
 dependencies:
   config:
@@ -6,25 +7,51 @@ dependencies:
     - field.field.node.article.field_article_categories
     - field.field.node.article.field_article_type
     - field.field.node.article.field_description
-    - field.field.node.article.field_header
     - field.field.node.article.field_list_date
     - field.field.node.article.field_list_media
+    - field.field.node.article.field_meta_tags
     - field.field.node.article.layout_builder__layout
     - node.type.article
   module:
     - datetime
-    - entity_reference_revisions
     - layout_builder
     - layout_builder_restrictions
-    - layout_discovery
+    - premium_articles_layout
+    - premium_layout_builder_restrictions
     - user
 third_party_settings:
   layout_builder:
-    allow_custom: true
     enabled: true
+    allow_custom: true
+    sections:
+      -
+        layout_id: layout_hero_section
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+          column_widths: ''
+          color_theme: {  }
+          column_spacing_top: section--spacing-top-none
+          column_spacing_bottom: section--spacing-bottom-none
+          hide_breadcrumbs: false
+          column_width: section--width-full
+        components: {  }
+        third_party_settings: {  }
+      -
+        layout_id: layout_article_sidebar_section
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+          column_widths: ''
+          color_theme: {  }
+          column_spacing_top: section--spacing-top-none
+          column_spacing_bottom: section--spacing-bottom-none
+          hide_breadcrumbs: false
+          column_width: section--width-full
+        components: {  }
+        third_party_settings: {  }
   layout_builder_restrictions:
     allowed_block_categories:
-      - 'Chaos Tools'
       - 'Content fields'
       - 'Custom block types'
       - Devel
@@ -39,6 +66,30 @@ third_party_settings:
       - Webform
       - core
     entity_view_mode_restriction:
+      allowed_layouts:
+        - layout_onecol
+        - layout_twocol_section
+        - layout_threecol_section
+        - layout_article_sidebar_section
+        - layout_hero_section
+      denylisted_blocks:
+        'Custom block types':
+          - basic
+        'Inline blocks':
+          - 'inline_block:basic'
+      allowlisted_blocks: {  }
+      restricted_categories:
+        - 'Content fields'
+        - Devel
+        - Forms
+        - Help
+        - 'Lists (Views)'
+        - Menus
+        - Premium
+        - System
+        - User
+        - Webform
+        - core
       whitelisted_blocks:
         'Chaos Tools': {  }
         'Content fields': {  }
@@ -56,47 +107,94 @@ third_party_settings:
           - basic
         'Inline blocks':
           - 'inline_block:basic'
+    entity_view_mode_restriction_by_region:
       allowed_layouts:
         - layout_onecol
         - layout_twocol_section
         - layout_threecol_section
-      restricted_categories:
-        - Devel
+        - layout_article_sidebar_section
+        - layout_hero_section
+      allowlisted_blocks:
+        layout_article_sidebar_section:
+          content:
+            'Custom block types':
+              - image
+              - quote
+              - rte
+              - video
+            'Inline blocks':
+              - 'inline_block:image'
+              - 'inline_block:quote'
+              - 'inline_block:rte'
+              - 'inline_block:video'
+          sidebar:
+            'Custom block types':
+              - button
+            'Inline blocks':
+              - 'inline_block:button'
+        layout_hero_section:
+          all_regions:
+            'Custom block types':
+              - hero
+            'Inline blocks':
+              - 'inline_block:hero'
+      denylisted_blocks:
+        layout_threecol_section:
+          all_regions:
+            'Custom block types':
+              - appetizer
+              - hero
+            'Inline blocks':
+              - 'inline_block:appetizer'
+              - 'inline_block:hero'
+        layout_twocol_section:
+          all_regions:
+            'Custom block types':
+              - appetizer
+              - hero
+            'Inline blocks':
+              - 'inline_block:appetizer'
+              - 'inline_block:hero'
+    unique_section_restriction:
+      unique_layouts:
+        - layout_article_sidebar_section
+        - layout_hero_section
+    singular_block_region_restriction:
+      singular_regions:
+        layout_hero_section:
+          - content
 id: node.article.full
 targetEntityType: node
 bundle: article
 mode: full
 content:
-  field_header:
-    weight: 1
-    label: hidden
-    settings:
-      view_mode: default
-      link: ''
+  content_moderation_control:
+    settings: {  }
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
+    weight: -20
     region: content
   field_list_date:
-    weight: 2
+    type: datetime_time_ago
     label: hidden
     settings:
       future_format: '@interval hence'
       past_format: '@interval ago'
       granularity: 2
     third_party_settings: {  }
-    type: datetime_time_ago
+    weight: 2
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   body: true
   field_article_categories: true
   field_article_type: true
   field_description: true
   field_list_media: true
+  field_meta_tags: true
   langcode: true
   layout_builder__layout: true
   search_api_excerpt: true

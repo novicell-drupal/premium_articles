@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\premium_articles_layout\Form;
+namespace Drupal\premium_articles\Form;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;

@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\premium_articles_layout\Plugin\Layout;
+namespace Drupal\premium_articles\Plugin\Layout;
 
 use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Annotation\ContextDefinition;

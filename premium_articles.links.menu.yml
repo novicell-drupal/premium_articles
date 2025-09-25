@@ -1,6 +1,6 @@
-premium_articles_layout.settings:
+premium_articles.settings:
   title: 'Article layout settings'
   description: 'Article layout settings'
-  route_name: premium_articles_layout.settings
+  route_name: premium_articles.settings
   weight: 100
   parent: system.admin_config_content
