@@ -52,6 +52,7 @@ third_party_settings:
         third_party_settings: {  }
   layout_builder_restrictions:
     allowed_block_categories:
+      - Announcements
       - 'Content fields'
       - 'Custom block types'
       - Devel
@@ -64,6 +65,7 @@ third_party_settings:
       - System
       - User
       - Webform
+      - Workspace
       - core
     entity_view_mode_restriction:
       allowed_layouts:
@@ -72,13 +74,10 @@ third_party_settings:
         - layout_threecol_section
         - layout_article_sidebar_section
         - layout_hero_section
-      denylisted_blocks:
-        'Custom block types':
-          - basic
-        'Inline blocks':
-          - 'inline_block:basic'
+      denylisted_blocks: {  }
       allowlisted_blocks: {  }
       restricted_categories:
+        - Announcements
         - 'Content fields'
         - Devel
         - Forms
@@ -89,6 +88,7 @@ third_party_settings:
         - System
         - User
         - Webform
+        - Workspace
         - core
       whitelisted_blocks:
         'Chaos Tools': {  }
@@ -118,20 +118,34 @@ third_party_settings:
         layout_article_sidebar_section:
           content:
             'Custom block types':
+              - accordion
+              - button
+              - divider
               - image
               - quote
               - rte
+              - slideshow
+              - spacer
               - video
             'Inline blocks':
+              - 'inline_block:accordion'
+              - 'inline_block:button'
+              - 'inline_block:divider'
               - 'inline_block:image'
               - 'inline_block:quote'
+              - 'inline_block:slideshow'
+              - 'inline_block:spacer'
               - 'inline_block:rte'
               - 'inline_block:video'
           sidebar:
             'Custom block types':
               - button
+              - rte
+              - spacer
             'Inline blocks':
               - 'inline_block:button'
+              - 'inline_block:spacer'
+              - 'inline_block:rte'
         layout_hero_section:
           all_regions:
             'Custom block types':
@@ -143,18 +157,125 @@ third_party_settings:
           all_regions:
             'Custom block types':
               - appetizer
+              - articles
+              - article_form
+              - calendar
+              - content_carousel
               - hero
+              - slideshow
             'Inline blocks':
               - 'inline_block:appetizer'
+              - 'inline_block:article_form'
+              - 'inline_block:articles'
+              - 'inline_block:calendar'
+              - 'inline_block:content_carousel'
               - 'inline_block:hero'
         layout_twocol_section:
           all_regions:
             'Custom block types':
               - appetizer
+              - articles
+              - article_form
+              - calendar
+              - content_carousel
               - hero
             'Inline blocks':
               - 'inline_block:appetizer'
+              - 'inline_block:article_form'
+              - 'inline_block:articles'
+              - 'inline_block:calendar'
+              - 'inline_block:content_carousel'
               - 'inline_block:hero'
+      restricted_categories:
+        layout_article_sidebar_section:
+          content:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
+          sidebar:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
+        layout_twocol_section:
+          all_regions:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
+        layout_threecol_section:
+          all_regions:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
+        layout_onecol:
+          all_regions:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
+        layout_hero_section:
+          all_regions:
+            - Announcements
+            - 'Content fields'
+            - Devel
+            - Forms
+            - Help
+            - 'Lists (Views)'
+            - Menus
+            - Premium
+            - System
+            - User
+            - Webform
+            - Workspace
+            - core
     unique_section_restriction:
       unique_layouts:
         - layout_article_sidebar_section

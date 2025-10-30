@@ -1,4 +1,3 @@
-uuid: c39eef80-b98f-44ef-b412-dddc375f02e7
 langcode: en
 status: true
 dependencies:
@@ -7,8 +6,6 @@ dependencies:
     - field.field.block_content.articles.field_articles
   module:
     - entity_overview
-_core:
-  default_config_hash: ffqVFCxK1lsEN7GYnAR-Bph55DQKvtSs7yBS1mOiv5k
 id: block_content.articles.default
 targetEntityType: block_content
 bundle: articles

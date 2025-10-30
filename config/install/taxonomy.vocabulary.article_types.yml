@@ -5,3 +5,4 @@ name: 'Article types'
 vid: article_types
 description: 'The available types of articles.'
 weight: 0
+new_revision: false

@@ -2,10 +2,9 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.article.field_article_categories
-    - field.field.node.article.field_article_type
-    - field.field.node.article.field_list_date
     - node.type.article
+  module:
+    - node
 id: article
 label: Article
 entity_bundles:
@@ -15,5 +14,6 @@ fields:
   field_article_categories: checkboxes
   field_article_type: checkboxes
 engine_id: entity_query
+engine_settings: {  }
 sort_field: field_list_date
 show_total: ''

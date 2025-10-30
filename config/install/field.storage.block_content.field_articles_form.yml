@@ -11,6 +11,7 @@ type: overview_filter
 settings:
   overview: article
   allow_facets: 1
+  entity_bundle: ''
 module: entity_overview
 locked: false
 cardinality: 1

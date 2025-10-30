@@ -5,8 +5,8 @@ dependencies:
     - field.field.taxonomy_term.article_types.field_overview
     - taxonomy.vocabulary.article_types
   module:
+    - entity_overview
     - path
-    - premium_articles
     - text
 id: taxonomy_term.article_types.default
 targetEntityType: taxonomy_term

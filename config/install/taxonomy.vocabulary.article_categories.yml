@@ -5,3 +5,4 @@ name: 'Article categories'
 vid: article_categories
 description: 'Used to group together related articles.'
 weight: 0
+new_revision: false
