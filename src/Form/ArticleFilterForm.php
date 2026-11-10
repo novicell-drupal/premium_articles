@@ -3,6 +3,7 @@ namespace Drupal\premium_articles\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\entity_overview\Form\OverviewFilterForm;
+use Drupal\entity_overview\OverviewFilter;
 
 class ArticleFilterForm extends OverviewFilterForm {
 
@@ -18,12 +19,12 @@ class ArticleFilterForm extends OverviewFilterForm {
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   * @param array $options
+   * @param \Drupal\entity_overview\OverviewFilter|null $filter
    *
    * @return array
    */
-  public function buildForm(array $form, FormStateInterface $form_state, array $options = []) {
-    $form = parent::buildForm($form, $form_state, $options);
+  public function buildForm(array $form, FormStateInterface $form_state, OverviewFilter $filter = NULL) {
+    $form = parent::buildForm($form, $form_state, $filter);
     $form['#attributes']['class'][] = 'article-form';
     return $form;
   }
